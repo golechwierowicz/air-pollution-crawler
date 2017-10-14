@@ -5,7 +5,7 @@ import com.google.common.base.MoreObjects;
 import java.util.List;
 
 public class CrawlingRequest {
-    private final String url;
+    private String url;
     private final List<String> xPaths;
     private final boolean throttlingEnabled;
     private final int throttlingSeconds;
@@ -21,8 +21,22 @@ public class CrawlingRequest {
         this.filterWord = filterWord;
     }
 
+    public CrawlingRequest(CrawlingRequest other) {
+        this.url = other.url;
+        this.xPaths = other.xPaths;
+        this.depth = other.depth;
+        this.throttlingEnabled = other.throttlingEnabled;
+        this.throttlingSeconds = other.throttlingSeconds;
+        this.depth = other.depth;
+        this.filterWord = other.filterWord;
+    }
+
     public String getUrl() {
         return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public List<String> getxPaths() {
@@ -39,6 +53,10 @@ public class CrawlingRequest {
 
     public int getDepth() {
         return depth;
+    }
+
+    public void setDepth(int depth) {
+        this.depth = depth;
     }
 
     public String getFilterWord() {

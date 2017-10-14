@@ -18,21 +18,15 @@ import java.util.UUID;
 public class SinglePageCrawlerActor extends AbstractActor {
     private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
     private final CrawlerService crawlerService;
-    private int depth;
-    private String url;
-    private final String filterWord;
     private final UUID requestId;
     private final String masterPath;
-    private int throttlingSeconds = 0;
 
-    public SinglePageCrawlerActor(CrawlerService crawlerService, int depth, String url, String filterWord, UUID requestId, String masterPath, int throttlingSeconds) {
+    public SinglePageCrawlerActor(CrawlerService crawlerService,
+                                  UUID requestId,
+                                  String masterPath) {
         super();
-        this.depth = depth;
-        this.url = url;
-        this.filterWord = filterWord;
         this.requestId = requestId;
         this.masterPath = masterPath;
-        this.throttlingSeconds = throttlingSeconds;
         this.crawlerService = crawlerService;
     }
 
@@ -40,26 +34,26 @@ public class SinglePageCrawlerActor extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(CrawlingRequest.class, cr -> {
-                        Optional<WebContent> wc = crawlerService.getWebPageContent(cr.getUrl());
-                        if(wc.isPresent() && depth > 0) {
-                            List<WebContent> result = extractByXPaths(wc.get(), cr.getxPaths());
-                            getSender().tell(result, sender());
-                            List<String> urls = result.size() > 0 ? result.get(0).getUrls() : ImmutableList.of();
-                            for (String s : urls) {
-                                ActorRef slave = getContext().actorOf(Props.create(SinglePageCrawlerActor.class,
-                                        crawlerService,
-                                        depth - 1,
-                                        url,
-                                        filterWord,
-                                        requestId,
-                                        masterPath,
-                                        throttlingSeconds
-                                        ));
-                                slave.tell(cr, sender());
-                            }
+                    Optional<WebContent> wc = crawlerService.getWebPageContent(cr.getUrl());
+                    if (wc.isPresent() && cr.getDepth() > 0) {
+                        List<WebContent> result = extractByXPaths(wc.get(), cr.getxPaths());
+                        getContext().actorSelection(masterPath).tell(result, self());
+                        List<String> urls = result.size() > 0 ? result.get(0).getUrls() : ImmutableList.of();
+                        for (String s : urls) {
+                            ActorRef slave = getContext().actorOf(Props.create(SinglePageCrawlerActor.class,
+                                    crawlerService,
+                                    requestId,
+                                    masterPath
+                            ));
+                            CrawlingRequest crNew = new CrawlingRequest(cr);
+                            crNew.setDepth(crNew.getDepth() - 1);
+                            crNew.setUrl(s);
+                            slave.tell(crNew, getSelf());
                         }
+                    }
 
-                        log.info("Received message: {}", cr);})
+                    log.info("Received message: {}", cr);
+                })
                 .matchAny(any -> log.info("Received unknown message...{}", any))
                 .build();
     }
@@ -67,7 +61,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
     private List<WebContent> extractByXPaths(WebContent webContent, List<String> XPaths) {
         List<WebContent> result = new ArrayList<>();
 
-        for(String XPath : XPaths) {
+        for (String XPath : XPaths) {
             result.addAll(crawlerService.extractByXPath(webContent, XPath));
         }
 
