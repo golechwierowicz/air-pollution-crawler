@@ -29,7 +29,7 @@ public class CrawlerMasterActor extends AbstractActor {
                         if(o instanceof WebContent)
                             result.add((WebContent) o);
                     }
-                    System.out.println("Master state: " + result.size());
+                    log.info("Master state: " + result.size());
                 }))
                 .match(GetResult.class, (p -> {
                     p.result = result;

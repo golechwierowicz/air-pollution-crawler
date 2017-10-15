@@ -13,12 +13,11 @@ import javax.xml.xpath.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
-/**
- * @author Grzegorz Olechwierowicz
- * @since 29.03.2017.
- */
 public class XPathQueryServiceImpl implements XPathQueryService {
+    private static Logger log = Logger.getLogger(XPathQueryServiceImpl.class.getName());
+
     @Override
     public List<String> query(String query, Document document) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -50,10 +49,10 @@ public class XPathQueryServiceImpl implements XPathQueryService {
             result = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             evalued =  mapToNodesList(result);
         } catch (AssertionError ae) {
-            System.out.println("XPath expression eval returned null.");
+            log.severe("XPath expression eval returned null.");
             ae.printStackTrace();
         } catch (XPathExpressionException e) {
-            System.out.println("XPath expression was evaluated wrongly.");
+            log.severe("XPath expression was evaluated wrongly.");
             e.printStackTrace();
         }
         return evalued;

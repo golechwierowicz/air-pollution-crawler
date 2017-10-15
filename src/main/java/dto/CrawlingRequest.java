@@ -14,9 +14,15 @@ public class CrawlingRequest {
     private String filterWord;
     private UUID requestUUID;
 
-    public CrawlingRequest() {};
+    public CrawlingRequest() {}
 
-    public CrawlingRequest(String url, List<String> XPaths, boolean throttlingEnabled, int throttlingSeconds, int depth, String filterWord, UUID requestUUID) {
+    public CrawlingRequest(String url,
+                           List<String> XPaths,
+                           boolean throttlingEnabled,
+                           int throttlingSeconds,
+                           int depth,
+                           String filterWord,
+                           UUID requestUUID) {
         this.url = url;
         this.xPaths = XPaths;
         this.throttlingEnabled = throttlingEnabled;
@@ -68,18 +74,6 @@ public class CrawlingRequest {
         return filterWord;
     }
 
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("url", url)
-                .add("xPaths", xPaths)
-                .add("throttlingEnabled", throttlingEnabled)
-                .add("throttlingSeconds", throttlingSeconds)
-                .add("depth", depth)
-                .add("filterWord", filterWord)
-                .toString();
-    }
-
     public UUID getRequestUUID() {
         return requestUUID;
     }
@@ -102,5 +96,18 @@ public class CrawlingRequest {
 
     public void setThrottlingSeconds(int throttlingSeconds) {
         this.throttlingSeconds = throttlingSeconds;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("url", url)
+                .add("xPaths", xPaths)
+                .add("throttlingEnabled", throttlingEnabled)
+                .add("throttlingSeconds", throttlingSeconds)
+                .add("depth", depth)
+                .add("filterWord", filterWord)
+                .add("requestUUID", requestUUID)
+                .toString();
     }
 }
