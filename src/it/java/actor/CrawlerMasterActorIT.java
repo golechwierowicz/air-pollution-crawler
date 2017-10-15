@@ -1,7 +1,6 @@
 package actor;
 
-import actors.CrawlerMaster;
-import actors.SinglePageCrawlerActor;
+import actors.CrawlerMasterActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
@@ -9,18 +8,16 @@ import akka.testkit.javadsl.TestKit;
 import com.google.common.collect.ImmutableList;
 import dto.CrawlingRequest;
 import dto.GetResult;
-import model.WebContent;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import service.CrawlerService;
-import service.CrawlerServiceImpl;
-import service.XPathQueryServiceImpl;
+import scala.concurrent.duration.FiniteDuration;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
-public class SinglePageCrawlerActorIT {
+public class CrawlerMasterActorIT {
     private static ActorSystem system;
 
     @BeforeClass
@@ -35,26 +32,22 @@ public class SinglePageCrawlerActorIT {
     }
 
     @Test
-    public void testCrawling() throws Exception { // requires internet
+    public void testCrawlingDepthOne() throws Exception { // requires internet
         new TestKit(system) {{
-            int depth = 1;
-            CrawlerService crawlerService = new CrawlerServiceImpl(new XPathQueryServiceImpl());
-            UUID requestId = UUID.randomUUID();
-            String masterPath = getRef().path().toStringWithoutAddress();
             CrawlingRequest crawlingRequest = new CrawlingRequest(
                     "http://www.tvn24.pl",
                     ImmutableList.of("//*/article/h1/a"),
                     false,
                     0,
-                    2,
+                    1,
+                    null,
                     null);
-            final Props props = Props.create(CrawlerMaster.class);
-            final ActorRef master  = system.actorOf(props);
+            final Props props = Props.create(CrawlerMasterActor.class);
+            final ActorRef master = system.actorOf(props);
             master.tell(crawlingRequest, getTestActor());
-            Thread.sleep(10000);
+            Thread.sleep(2000);
             master.tell(new GetResult(), getTestActor());
-            List result =  expectMsgClass(List.class);
-            System.out.println(result);
+            expectMsgClass(new FiniteDuration(100, TimeUnit.SECONDS), List.class);
         }};
     }
 }

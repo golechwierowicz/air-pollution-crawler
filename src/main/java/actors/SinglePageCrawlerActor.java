@@ -34,25 +34,27 @@ public class SinglePageCrawlerActor extends AbstractActor {
     public Receive createReceive() {
         return receiveBuilder()
                 .match(CrawlingRequest.class, cr -> {
+                    log.info("Received message: {}", cr);
                     Optional<WebContent> wc = crawlerService.getWebPageContent(cr.getUrl());
                     if (wc.isPresent() && cr.getDepth() > 0) {
                         List<WebContent> result = extractByXPaths(wc.get(), cr.getxPaths());
                         getContext().actorSelection(masterPath).tell(result, self());
                         List<String> urls = result.size() > 0 ? result.get(0).getUrls() : ImmutableList.of();
-                        for (String s : urls) {
-                            ActorRef slave = getContext().actorOf(Props.create(SinglePageCrawlerActor.class,
-                                    crawlerService,
-                                    requestId,
-                                    masterPath
-                            ));
-                            CrawlingRequest crNew = new CrawlingRequest(cr);
-                            crNew.setDepth(crNew.getDepth() - 1);
-                            crNew.setUrl(s);
-                            slave.tell(crNew, getSelf());
+                        int newDepth = cr.getDepth() - 1;
+                        if(newDepth > 0) {
+                            for (String s : urls) {
+                                ActorRef slave = getContext().actorOf(Props.create(SinglePageCrawlerActor.class,
+                                        crawlerService,
+                                        requestId,
+                                        masterPath
+                                ));
+                                CrawlingRequest crNew = CrawlingRequest.copyCrawlingRequest(cr);
+                                crNew.setDepth(newDepth);
+                                crNew.setUrl(s);
+                                slave.tell(crNew, getSelf());
+                            }
                         }
                     }
-
-                    log.info("Received message: {}", cr);
                 })
                 .matchAny(any -> log.info("Received unknown message...{}", any))
                 .build();
@@ -61,9 +63,10 @@ public class SinglePageCrawlerActor extends AbstractActor {
     private List<WebContent> extractByXPaths(WebContent webContent, List<String> XPaths) {
         List<WebContent> result = new ArrayList<>();
 
-        for (String XPath : XPaths) {
+        for (String XPath : XPaths)
             result.addAll(crawlerService.extractByXPath(webContent, XPath));
-        }
+
+        result.forEach(wc -> wc.setRequestID(requestId));
 
         return result;
     }

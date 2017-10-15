@@ -43,8 +43,8 @@ public class CrawlerServiceImpl implements CrawlerService {
                     .filter(urlValidator::isValid)
                     .collect(Collectors.toList());
             return Optional.of(new WebContent(response.body(), urls));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
+
         }
 
         return Optional.empty();

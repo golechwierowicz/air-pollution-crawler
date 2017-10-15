@@ -3,11 +3,13 @@ package model;
 import com.google.common.base.MoreObjects;
 
 import java.util.List;
+import java.util.UUID;
 
 public class WebContent {
     private String content;
     private List<String> urls;
     private String XPathUsed;
+    private UUID requestID;
 
     public WebContent(String content, List<String> urls) {
         this.content = content;
@@ -50,6 +52,14 @@ public class WebContent {
 
     public void setXPathUsed(String XPathUsed) {
         this.XPathUsed = XPathUsed;
+    }
+
+    public void setRequestID(UUID requestID) {
+        this.requestID = requestID;
+    }
+
+    public UUID getRequestID() {
+        return requestID;
     }
 
     @Override

@@ -3,32 +3,37 @@ package dto;
 import com.google.common.base.MoreObjects;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CrawlingRequest {
     private String url;
-    private final List<String> xPaths;
-    private final boolean throttlingEnabled;
-    private final int throttlingSeconds;
+    private List<String> xPaths;
+    private boolean throttlingEnabled;
+    private int throttlingSeconds;
     private int depth;
     private String filterWord;
+    private UUID requestUUID;
 
-    public CrawlingRequest(String url, List<String> XPaths, boolean throttlingEnabled, int throttlingSeconds, int depth, String filterWord) {
+    public CrawlingRequest() {};
+
+    public CrawlingRequest(String url, List<String> XPaths, boolean throttlingEnabled, int throttlingSeconds, int depth, String filterWord, UUID requestUUID) {
         this.url = url;
         this.xPaths = XPaths;
         this.throttlingEnabled = throttlingEnabled;
         this.throttlingSeconds = throttlingSeconds;
         this.depth = depth;
         this.filterWord = filterWord;
+        this.requestUUID = requestUUID;
     }
 
-    public CrawlingRequest(CrawlingRequest other) {
-        this.url = other.url;
-        this.xPaths = other.xPaths;
-        this.depth = other.depth;
-        this.throttlingEnabled = other.throttlingEnabled;
-        this.throttlingSeconds = other.throttlingSeconds;
-        this.depth = other.depth;
-        this.filterWord = other.filterWord;
+    public static CrawlingRequest copyCrawlingRequest(CrawlingRequest other) {
+        return new CrawlingRequest(other.url,
+                other.xPaths,
+                other.throttlingEnabled,
+                other.throttlingSeconds,
+                other.depth,
+                other.filterWord,
+                other.requestUUID);
     }
 
     public String getUrl() {
@@ -73,5 +78,29 @@ public class CrawlingRequest {
                 .add("depth", depth)
                 .add("filterWord", filterWord)
                 .toString();
+    }
+
+    public UUID getRequestUUID() {
+        return requestUUID;
+    }
+
+    public void setRequestUUID(UUID requestUUID) {
+        this.requestUUID = requestUUID;
+    }
+
+    public void setFilterWord(String filterWord) {
+        this.filterWord = filterWord;
+    }
+
+    public void setxPaths(List<String> xPaths) {
+        this.xPaths = xPaths;
+    }
+
+    public void setThrottlingEnabled(boolean throttlingEnabled) {
+        this.throttlingEnabled = throttlingEnabled;
+    }
+
+    public void setThrottlingSeconds(int throttlingSeconds) {
+        this.throttlingSeconds = throttlingSeconds;
     }
 }

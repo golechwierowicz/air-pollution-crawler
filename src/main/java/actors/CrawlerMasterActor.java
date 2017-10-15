@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CrawlerMaster extends AbstractActor {
+public class CrawlerMasterActor extends AbstractActor {
     private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
     private final List<WebContent> result = new ArrayList<>();
 
@@ -29,20 +29,18 @@ public class CrawlerMaster extends AbstractActor {
                         if(o instanceof WebContent)
                             result.add((WebContent) o);
                     }
+                    System.out.println("Master state: " + result.size());
                 }))
                 .match(GetResult.class, (p -> {
-                    sender().tell(result, self());
+                    p.result = result;
+                    sender().tell(p, self());
                 }))
                 .matchAny(any -> log.info("Received unknown message...{}", any))
                 .build();
     }
 
-    private UUID generateCrawlingRequestID() {
-        return UUID.randomUUID();
-    }
-
     private void crawl(CrawlingRequest crawlingRequest) {
-        UUID requestUUID = generateCrawlingRequestID();
+        UUID requestUUID = crawlingRequest.getRequestUUID();
         String masterPath = akka.serialization.Serialization.serializedActorPath(self());
         CrawlerService crawlerService = new CrawlerServiceImpl(new XPathQueryServiceImpl());
 
