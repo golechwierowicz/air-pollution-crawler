@@ -7,11 +7,12 @@ import akka.actor.ActorSelection;
 import akka.actor.Props;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import dto.CrawlingRequest;
 import dto.GetResult;
 import model.WebContent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import scala.concurrent.Await;
 import scala.concurrent.Future;
 
@@ -20,11 +21,10 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 @Path("/crawl")
 public class CrawlingResource {
-    private static Logger log = Logger.getLogger(CrawlingResource.class.getName());
+    private static Logger log = LoggerFactory.getLogger(CrawlingResource.class);
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)

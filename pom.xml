@@ -109,6 +109,16 @@
             <artifactId>guava</artifactId>
             <version>23.2-jre</version>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-slf4j_2.12</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
