@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class CrawlingRequest {
+    private List<String> filterWords;
     private String url;
     private List<String> xPaths;
     private boolean throttlingEnabled;
     private int throttlingSeconds;
     private int depth;
-    private String filterWord;
     private UUID requestUUID;
 
     public CrawlingRequest() {}
@@ -21,14 +21,14 @@ public class CrawlingRequest {
                            boolean throttlingEnabled,
                            int throttlingSeconds,
                            int depth,
-                           String filterWord,
+                           List<String> filterWords,
                            UUID requestUUID) {
         this.url = url;
         this.xPaths = XPaths;
         this.throttlingEnabled = throttlingEnabled;
         this.throttlingSeconds = throttlingSeconds;
         this.depth = depth;
-        this.filterWord = filterWord;
+        this.filterWords = filterWords;
         this.requestUUID = requestUUID;
     }
 
@@ -38,7 +38,7 @@ public class CrawlingRequest {
                 other.throttlingEnabled,
                 other.throttlingSeconds,
                 other.depth,
-                other.filterWord,
+                other.filterWords,
                 other.requestUUID);
     }
 
@@ -70,20 +70,12 @@ public class CrawlingRequest {
         this.depth = depth;
     }
 
-    public String getFilterWord() {
-        return filterWord;
-    }
-
     public UUID getRequestUUID() {
         return requestUUID;
     }
 
     public void setRequestUUID(UUID requestUUID) {
         this.requestUUID = requestUUID;
-    }
-
-    public void setFilterWord(String filterWord) {
-        this.filterWord = filterWord;
     }
 
     public void setxPaths(List<String> xPaths) {
@@ -98,6 +90,14 @@ public class CrawlingRequest {
         this.throttlingSeconds = throttlingSeconds;
     }
 
+    public List<String> getFilterWords() {
+        return filterWords;
+    }
+
+    public void setFilterWords(List<String> filterWords) {
+        this.filterWords = filterWords;
+    }
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
@@ -106,7 +106,7 @@ public class CrawlingRequest {
                 .add("throttlingEnabled", throttlingEnabled)
                 .add("throttlingSeconds", throttlingSeconds)
                 .add("depth", depth)
-                .add("filterWord", filterWord)
+                .add("filterWord", filterWords)
                 .add("requestUUID", requestUUID)
                 .toString();
     }

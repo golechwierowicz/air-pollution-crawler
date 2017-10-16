@@ -1,0 +1,9 @@
+{
+    "url": "http://www.tvn24.pl",
+    "xPaths": ["//*/article/h1/a", "//*/article/div[2]/div[2]"],
+    "throttlingEnabled": false,
+    "throttlingSeconds": 0,
+    "depth": 2,
+    "filterWords": ["rezydenci"],
+    "requestUUID": null
+}

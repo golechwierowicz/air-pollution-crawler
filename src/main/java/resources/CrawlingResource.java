@@ -7,6 +7,8 @@ import akka.actor.ActorSelection;
 import akka.actor.Props;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
 import dto.CrawlingRequest;
 import dto.GetResult;
 import model.WebContent;
@@ -21,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Path("/crawl")
-public class SimpleResource {
-    private static Logger log = Logger.getLogger(SimpleResource.class.getName());
+public class CrawlingResource {
+    private static Logger log = Logger.getLogger(CrawlingResource.class.getName());
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
@@ -51,6 +53,9 @@ public class SimpleResource {
 
         final Timeout timeout = new Timeout(60, TimeUnit.SECONDS);
         final Future<Object> future = Patterns.ask(requestedMaster, new GetResult(), timeout);
-        return ((GetResult) Await.result(future, timeout.duration())).result;
+
+        List<WebContent> result = ((GetResult) Await.result(future, timeout.duration())).result;
+        result.forEach(wc -> wc.setUrls(ImmutableList.of()));
+        return result;
     }
 }

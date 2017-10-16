@@ -10,10 +10,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CrawlerServiceImpl implements CrawlerService {
-
+    private static Logger log = Logger.getLogger(CrawlerServiceImpl.class.getName());
     private XPathQueryService xPathQueryService;
 
     public CrawlerServiceImpl(XPathQueryService xPathQueryService) {
@@ -42,9 +44,9 @@ public class CrawlerServiceImpl implements CrawlerService {
                     .map(p -> p.attr("href"))
                     .filter(urlValidator::isValid)
                     .collect(Collectors.toList());
-            return Optional.of(new WebContent(response.body(), urls));
-        } catch (IOException ignored) {
-
+            return Optional.of(new WebContent(response.body(), urls, url));
+        } catch (IOException e) {
+            log.log(Level.WARNING, "IOException was thrown", e);
         }
 
         return Optional.empty();

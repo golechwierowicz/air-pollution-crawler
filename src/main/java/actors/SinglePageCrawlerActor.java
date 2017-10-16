@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class SinglePageCrawlerActor extends AbstractActor {
     private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
@@ -38,6 +40,12 @@ public class SinglePageCrawlerActor extends AbstractActor {
                     Optional<WebContent> wc = crawlerService.getWebPageContent(cr.getUrl());
                     if (wc.isPresent() && cr.getDepth() > 0) {
                         List<WebContent> result = extractByXPaths(wc.get(), cr.getxPaths());
+                        if(!cr.getFilterWords().isEmpty()) {
+                            result = result
+                                    .stream()
+                                    .filter(w -> w.containsWord(cr.getFilterWords()))
+                                    .collect(Collectors.toList());
+                        }
                         getContext().actorSelection(masterPath).tell(result, self());
                         List<String> urls = result.size() > 0 ? result.get(0).getUrls() : ImmutableList.of();
                         int newDepth = cr.getDepth() - 1;

@@ -13,8 +13,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import scala.concurrent.duration.FiniteDuration;
 
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class CrawlerMasterActorIT {
@@ -47,7 +45,7 @@ public class CrawlerMasterActorIT {
             master.tell(crawlingRequest, getTestActor());
             Thread.sleep(2000);
             master.tell(new GetResult(), getTestActor());
-            expectMsgClass(new FiniteDuration(100, TimeUnit.SECONDS), List.class);
+            expectMsgClass(new FiniteDuration(100, TimeUnit.SECONDS), GetResult.class);
         }};
     }
 }

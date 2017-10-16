@@ -10,6 +10,7 @@ public class WebContent {
     private List<String> urls;
     private String XPathUsed;
     private UUID requestID;
+    private String crawledUrl;
 
     public WebContent(String content, List<String> urls) {
         this.content = content;
@@ -20,6 +21,13 @@ public class WebContent {
         this.content = content;
         this.urls = urls;
         this.XPathUsed = xPath;
+    }
+
+    public WebContent(String content, List<String> urls, String xPath, String crawledUrl) {
+        this.content = content;
+        this.urls = urls;
+        this.XPathUsed = xPath;
+        this.crawledUrl = crawledUrl;
     }
 
     public String getContent() {
@@ -34,8 +42,13 @@ public class WebContent {
         this.content = content;
     }
 
-    public boolean containsWord(String word) {
-        return content.contains(word);
+    public boolean containsWord(List<String> words) {
+        for (String word : words) {
+            if(content.contains(word)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<String> getUrls() {
@@ -62,12 +75,23 @@ public class WebContent {
         return requestID;
     }
 
+    public String getCrawledUrl() {
+        return crawledUrl;
+    }
+
+    public void setCrawledUrl(String crawledUrl) {
+        this.crawledUrl = crawledUrl;
+    }
+
+
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
                 .add("content", content)
                 .add("urls", urls)
                 .add("XPathUsed", XPathUsed)
+                .add("requestID", requestID)
+                .add("crawledUrl", crawledUrl)
                 .toString();
     }
 }
