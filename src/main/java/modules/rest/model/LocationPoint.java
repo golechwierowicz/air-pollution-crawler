@@ -1,24 +1,25 @@
 package modules.rest.model;
 
 public class LocationPoint {
-    private long latitude;
-    private long longtitude;
+    private int id;
+    private double latitude;
+    private double longtitude;
     private String name;
     private Long value;
 
-    public long getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public long getLongtitude() {
+    public double getLongtitude() {
         return longtitude;
     }
 
-    public void setLongtitude(long longtitude) {
+    public void setLongtitude(double longtitude) {
         this.longtitude = longtitude;
     }
 
@@ -36,5 +37,13 @@ public class LocationPoint {
 
     public void setValue(Long value) {
         this.value = value;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
