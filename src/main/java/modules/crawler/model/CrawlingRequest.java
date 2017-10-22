@@ -1,4 +1,4 @@
-package dto;
+package modules.crawler.model;
 
 import com.google.common.base.MoreObjects;
 

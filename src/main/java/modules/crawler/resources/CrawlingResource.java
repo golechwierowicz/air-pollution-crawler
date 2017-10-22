@@ -1,16 +1,16 @@
-package resources;
+package modules.crawler.resources;
 
-import actors.ActorSysContainer;
-import actors.CrawlerMasterActor;
+import modules.crawler.actors.ActorSysContainer;
+import modules.crawler.actors.CrawlerMasterActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
 import akka.actor.Props;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
 import com.google.common.collect.ImmutableList;
-import dto.CrawlingRequest;
-import dto.GetResult;
-import model.WebContent;
+import modules.crawler.model.CrawlingRequest;
+import modules.crawler.model.GetResult;
+import modules.crawler.model.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import scala.concurrent.Await;

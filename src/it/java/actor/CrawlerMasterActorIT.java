@@ -1,13 +1,13 @@
 package actor;
 
-import actors.CrawlerMasterActor;
+import modules.crawler.actors.CrawlerMasterActor;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.testkit.javadsl.TestKit;
 import com.google.common.collect.ImmutableList;
-import dto.CrawlingRequest;
-import dto.GetResult;
+import modules.crawler.model.CrawlingRequest;
+import modules.crawler.model.GetResult;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

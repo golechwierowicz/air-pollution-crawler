@@ -1,7 +1,7 @@
-package service;
+package modules.crawler.service;
 
 import base.SystemUtils;
-import model.WebContent;
+import modules.crawler.model.WebContent;
 import org.junit.Test;
 
 import java.util.List;

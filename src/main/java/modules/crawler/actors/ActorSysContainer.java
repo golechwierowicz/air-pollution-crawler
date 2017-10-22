@@ -1,4 +1,4 @@
-package actors;
+package modules.crawler.actors;
 
 import akka.actor.ActorSystem;
 

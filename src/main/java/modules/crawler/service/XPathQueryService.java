@@ -1,4 +1,4 @@
-package service;
+package modules.crawler.service;
 
 import org.w3c.dom.Document;
 

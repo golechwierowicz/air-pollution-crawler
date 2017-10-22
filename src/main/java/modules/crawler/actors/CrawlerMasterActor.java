@@ -1,16 +1,16 @@
-package actors;
+package modules.crawler.actors;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import dto.CrawlingRequest;
-import dto.GetResult;
-import model.WebContent;
-import service.CrawlerService;
-import service.CrawlerServiceImpl;
-import service.XPathQueryServiceImpl;
+import modules.crawler.model.CrawlingRequest;
+import modules.crawler.model.GetResult;
+import modules.crawler.model.WebContent;
+import modules.crawler.service.CrawlerService;
+import modules.crawler.service.CrawlerServiceImpl;
+import modules.crawler.service.XPathQueryServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;

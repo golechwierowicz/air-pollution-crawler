@@ -1,6 +1,6 @@
-package service;
+package modules.crawler.service;
 
-import model.WebContent;
+import modules.crawler.model.WebContent;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

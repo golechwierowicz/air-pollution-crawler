@@ -1,6 +1,6 @@
-package service;
+package modules.crawler.service;
 
-import model.WebContent;
+import modules.crawler.model.WebContent;
 
 import java.util.List;
 import java.util.Optional;

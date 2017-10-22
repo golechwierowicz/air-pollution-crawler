@@ -1,4 +1,4 @@
-package service;
+package modules.crawler.service;
 
 import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;

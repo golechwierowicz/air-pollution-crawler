@@ -1,4 +1,4 @@
-package actors;
+package modules.crawler.actors;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
@@ -6,15 +6,14 @@ import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import com.google.common.collect.ImmutableList;
-import dto.CrawlingRequest;
-import model.WebContent;
-import service.CrawlerService;
+import modules.crawler.model.CrawlingRequest;
+import modules.crawler.model.WebContent;
+import modules.crawler.service.CrawlerService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class SinglePageCrawlerActor extends AbstractActor {

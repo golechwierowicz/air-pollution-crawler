@@ -1,6 +1,4 @@
-package dto;
-
-import model.WebContent;
+package modules.crawler.model;
 
 import java.util.List;
 
