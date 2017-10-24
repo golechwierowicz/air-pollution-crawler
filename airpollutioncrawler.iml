@@ -15,6 +15,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: net.sourceforge.htmlcleaner:htmlcleaner:2.6.1" level="project" />
     <orderEntry type="library" name="Maven: org.jdom:jdom2:2.0.5" level="project" />
+    <orderEntry type="library" name="Maven: org.codehaus.groovy:groovy-all:indy:2.4.12" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.9.1" level="project" />
     <orderEntry type="library" name="Maven: commons-validator:commons-validator:1.4.0" level="project" />
     <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.8.3" level="project" />
