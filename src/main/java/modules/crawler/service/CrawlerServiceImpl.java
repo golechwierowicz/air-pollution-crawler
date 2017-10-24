@@ -1,5 +1,7 @@
 package modules.crawler.service;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import modules.crawler.model.WebContent;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Connection;
@@ -15,6 +17,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CrawlerServiceImpl implements CrawlerService {
+    private static Config config = ConfigFactory.load().atKey("crawler");
     private static Logger log = Logger.getLogger(CrawlerServiceImpl.class.getName());
     private XPathQueryService xPathQueryService;
 
@@ -25,8 +28,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     @Override
     public Optional<WebContent> getWebPageContent(String url) {
         UrlValidator urlValidator = new UrlValidator();
-        String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko)" +
-                " Chrome/61.0.3163.100 Safari/537.36"; // TODO: move to config
+        String userAgent = config.getString("browser_agent");
 
         try {
             Connection.Response response = Jsoup

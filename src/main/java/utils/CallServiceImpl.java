@@ -1,5 +1,8 @@
 package utils;
 
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
@@ -9,7 +12,8 @@ import javax.ws.rs.core.Response;
 import java.util.concurrent.*;
 
 public class CallServiceImpl implements CallService {
-    private static final ExecutorService pool = Executors.newFixedThreadPool(10); // TODO: make configurable
+    private static final Config config = ConfigFactory.load().atKey("rest.call_service");
+    private static final ExecutorService pool = Executors.newFixedThreadPool(config.getInt("thread_pool_size"));
 
     @Override
     public String getContent(String target) {

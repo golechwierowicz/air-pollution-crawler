@@ -33,7 +33,7 @@ public class XPathQueryServiceImpl implements XPathQueryService {
     public Optional<Document> cleanHtml(final String dirtyHtml) {
         TagNode tag = new HtmlCleaner().clean(dirtyHtml);
         try {
-            Document doc = new DomSerializer(new CleanerProperties()).createDOM(tag); // TODO: check if it parses DOM correctly
+            Document doc = new DomSerializer(new CleanerProperties()).createDOM(tag);
             return Optional.of(doc);
         } catch (ParserConfigurationException e) {
             return Optional.empty();
