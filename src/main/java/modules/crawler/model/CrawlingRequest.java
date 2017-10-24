@@ -13,6 +13,25 @@ public class CrawlingRequest {
     private int throttlingSeconds;
     private int depth;
     private UUID requestUUID;
+    private boolean filterByKeywordOnly = false;
+
+    public CrawlingRequest(List<String> filterWords,
+                           String url,
+                           List<String> xPaths,
+                           boolean throttlingEnabled,
+                           int throttlingSeconds,
+                           int depth,
+                           UUID requestUUID,
+                           boolean filterByKeywordOnly) {
+        this.filterWords = filterWords;
+        this.url = url;
+        this.xPaths = xPaths;
+        this.throttlingEnabled = throttlingEnabled;
+        this.throttlingSeconds = throttlingSeconds;
+        this.depth = depth;
+        this.requestUUID = requestUUID;
+        this.filterByKeywordOnly = filterByKeywordOnly;
+    }
 
     public CrawlingRequest() {}
 
@@ -96,6 +115,14 @@ public class CrawlingRequest {
 
     public void setFilterWords(List<String> filterWords) {
         this.filterWords = filterWords;
+    }
+
+    public boolean isFilterByKeywordOnly() {
+        return filterByKeywordOnly;
+    }
+
+    public void setFilterByKeywordOnly(boolean filterByKeywordOnly) {
+        this.filterByKeywordOnly = filterByKeywordOnly;
     }
 
     @Override

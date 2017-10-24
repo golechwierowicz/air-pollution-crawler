@@ -42,7 +42,7 @@ public class XPathQueryServiceImpl implements XPathQueryService {
 
     private List<String> evaluate(Document doc, XPath xpath, String query) {
         List<String> evalued = new ArrayList<>();
-        NodeList result = null;
+        NodeList result;
         try {
             XPathExpression expr =
                     xpath.compile(query);

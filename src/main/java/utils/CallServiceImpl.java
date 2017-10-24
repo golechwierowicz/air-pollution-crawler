@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.concurrent.*;
 
 public class CallServiceImpl implements CallService {
-    private static final Config config = ConfigFactory.load().atKey("rest.call_service");
+    private static final Config config = ConfigFactory.load().getConfig("rest.call_service");
     private static final ExecutorService pool = Executors.newFixedThreadPool(config.getInt("thread_pool_size"));
 
     @Override

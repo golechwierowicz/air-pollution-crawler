@@ -7,6 +7,11 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.traversal.DocumentTraversal;
+import org.w3c.dom.traversal.NodeFilter;
+import org.w3c.dom.traversal.NodeIterator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +22,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class CrawlerServiceImpl implements CrawlerService {
-    private static Config config = ConfigFactory.load().atKey("crawler");
+    private static Config config = ConfigFactory.load().getConfig("crawler");
     private static Logger log = Logger.getLogger(CrawlerServiceImpl.class.getName());
     private XPathQueryService xPathQueryService;
 
@@ -65,5 +70,25 @@ public class CrawlerServiceImpl implements CrawlerService {
                     .map(s -> new WebContent(s, webContent.getUrls(), XPath))
                     .collect(Collectors.toList());
         } else return new ArrayList<>();
+    }
+
+    @Override
+    public List<WebContent> extractByFilterWordOnly(WebContent webContent, List<String> filterWords) {
+        assert xPathQueryService != null;
+        List<WebContent> result = new ArrayList<>();
+        Optional<org.w3c.dom.Document> cleanHtml = xPathQueryService.cleanHtml(webContent.getContent());
+        if(cleanHtml.isPresent()) {
+            org.w3c.dom.Document doc = cleanHtml.get();
+            DocumentTraversal traversal = (DocumentTraversal) doc;
+            NodeIterator iterator = traversal.createNodeIterator(doc.getDocumentElement(),
+                    NodeFilter.SHOW_ALL, (n) ->
+                            WebContent.containsWord(filterWords, n.getTextContent())
+                                    ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT, true);
+            for (Node n = iterator.nextNode(); n != null; n = iterator.nextNode()) {
+                WebContent wc = new WebContent(n.getTextContent(), webContent.getUrls(), n.getBaseURI(), webContent.getCrawledUrl());
+                result.add(wc);
+            }
+        }
+        return result;
     }
 }

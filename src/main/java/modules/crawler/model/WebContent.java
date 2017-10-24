@@ -83,6 +83,15 @@ public class WebContent {
         this.crawledUrl = crawledUrl;
     }
 
+    public static boolean containsWord(List<String> words, String text) {
+        for (String word : words) {
+            if(text.contains(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public String toString() {

@@ -38,8 +38,11 @@ public class SinglePageCrawlerActor extends AbstractActor {
                     log.info("Received message: {}", cr);
                     Optional<WebContent> wc = crawlerService.getWebPageContent(cr.getUrl());
                     if (wc.isPresent() && cr.getDepth() > 0) {
-                        List<WebContent> result = extractByXPaths(wc.get(), cr.getxPaths());
-                        if(!cr.getFilterWords().isEmpty()) {
+
+                        List<WebContent> result = cr.isFilterByKeywordOnly() ?
+                                crawlerService.extractByFilterWordOnly(wc.get(), cr.getFilterWords())
+                                : extractByXPaths(wc.get(), cr.getxPaths());
+                        if (!cr.getFilterWords().isEmpty() && !cr.isFilterByKeywordOnly()) {
                             result = result
                                     .stream()
                                     .filter(w -> w.containsWord(cr.getFilterWords()))
@@ -48,7 +51,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
                         getContext().actorSelection(masterPath).tell(result, self());
                         List<String> urls = result.size() > 0 ? result.get(0).getUrls() : ImmutableList.of();
                         int newDepth = cr.getDepth() - 1;
-                        if(newDepth > 0) {
+                        if (newDepth > 0) {
                             for (String s : urls) {
                                 ActorRef slave = getContext().actorOf(Props.create(SinglePageCrawlerActor.class,
                                         crawlerService,
@@ -63,7 +66,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
                         }
                     }
                 })
-                .matchAny(any -> log.info("Received unknown message...{}", any))
+                .matchAny(any -> log.warning("Received unknown message...{}", any))
                 .build();
     }
 

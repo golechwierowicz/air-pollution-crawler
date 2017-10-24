@@ -9,4 +9,6 @@ public interface CrawlerService {
     Optional<WebContent> getWebPageContent(String url);
 
     List<WebContent> extractByXPath(WebContent webContent, String XPath);
+
+    List<WebContent> extractByFilterWordOnly(WebContent webContent, List<String> filterWords);
 }
