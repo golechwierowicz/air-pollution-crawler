@@ -3,8 +3,9 @@ package modules.rest.model;
 import java.util.Optional;
 
 public abstract class StationLocator {
-    Integer stationId = null;
-    String stationCity = null;
+    protected Integer stationId = null;
+    protected String stationCity = null;
+    public String stationName;
 
     public Optional<Integer> getStationId() {
         return Optional.ofNullable(stationId);

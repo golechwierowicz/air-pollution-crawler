@@ -1,7 +1,9 @@
 package modules.rest.model;
 
+import java.util.List;
+
 public class Measurement {
     public String measurementName;
-    public Double measurementValue;
+    public List<Double> measurementValue;
     public String[] attributes;
 }

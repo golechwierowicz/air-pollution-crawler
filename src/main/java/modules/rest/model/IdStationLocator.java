@@ -5,6 +5,7 @@ public class IdStationLocator extends StationLocator {
 
     public IdStationLocator(int id) {
         this.id = id;
+        setType();
     }
 
     @Override
