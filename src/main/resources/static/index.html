@@ -1,32 +1,68 @@
 <!doctype html>
 <html lang="en" ng-app="phonecatApp">
-  <head>
+<head>
     <meta charset="utf-8">
-    <title>Google Phone Gallery</title>
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="app.css" />
-    <link rel="stylesheet" href="app.animations.css" />
+    <title>Air pollution crawler</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="app.css"/>
 
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="app.module.js"></script>
     <script src="app.config.js"></script>
-    <script src="app.animations.js"></script>
     <script src="core/core.module.js"></script>
     <script src="core/checkmark/checkmark.filter.js"></script>
     <script src="core/phone/phone.module.js"></script>
     <script src="core/phone/phone.service.js"></script>
-    <script src="phone-list/phone-list.module.js"></script>
-    <script src="phone-list/phone-list.component.js"></script>
-    <script src="phone-detail/phone-detail.module.js"></script>
-    <script src="phone-detail/phone-detail.component.js"></script>
-  </head>
-  <body>
-    <div class="view-container">
-      <div ng-view class="view-frame"></div>
+    <script src="core/measurement/measurement.module.js"></script>
+    <script src="core/measurement/measurement.service.js"></script>
+    <script src="core/location-point/location-point.module.js"></script>
+    <script src="core/location-point/location-point.service.js"></script>
+    <script src="core/phone/phone.service.js"></script>
+    <script src="location-list/location-list.module.js"></script>
+    <script src="location-list/location-list.component.js"></script>
+    <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.min.css">
+</head>
+<body>
+<div class="row">
+    <div class="col-md-3">
+        <div class="nav-side-menu">
+            <div class="brand">Air pollution crawler</div>
+            <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+            <div class="menu-list">
+                <ul id="menu-content" class="menu-content collapse out">
+                    <li>
+                        <a href="#!/location_points">
+                            <i class="fa fa-list fa-lg"></i> List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-map fa-lg"></i> Map
+                        </a>
+                    </li>
+                    <li data-toggle="collapse" data-target="#service" class="collapsed">
+                        <a href="#"><i class="fa fa-globe fa-lg"></i> Test <span class="arrow"></span></a>
+                    </li>
+                    <ul class="sub-menu collapse" id="service">
+                        <li>New Service 1</li>
+                        <li>New Service 2</li>
+                        <li>New Service 3</li>
+                    </ul>
+
+                </ul>
+            </div>
+        </div>
     </div>
-  </body>
+    <div class="col-md-9">
+        <div class="view-container">
+            <div ng-view class="view-frame"></div>
+        </div>
+    </div>
+</div>
+</body>
 </html>
