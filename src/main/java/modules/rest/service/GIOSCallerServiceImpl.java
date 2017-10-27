@@ -12,7 +12,6 @@ import modules.rest.model.StationLocator;
 import modules.rest.model.gios.LocationPointDTO;
 import modules.rest.model.gios.MeasurementDTO;
 import modules.rest.model.gios.Sensor;
-import modules.rest.model.gios.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.CallService;
@@ -110,8 +109,7 @@ public class GIOSCallerServiceImpl extends CallerService {
                         log.error("Err when mapping measurement dto", e);
                         return new Measurement();
                     }
-                    measurement.measurementValue = Arrays.stream(measurementDTO.getValues()).map(Value::getValue).collect(Collectors.toList());
-                    measurement.measurementTimes = Arrays.stream(measurementDTO.getValues()).map(p -> p.getDate().getMillis()).collect(Collectors.toList());
+                    measurement.values = measurementDTO.getValues();
                     measurement.measurementName = measurementDTO.getKey();
                     return measurement;
                 }).collect(Collectors.toList());

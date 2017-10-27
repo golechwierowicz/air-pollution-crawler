@@ -6,8 +6,7 @@ angular.module('locationDetails').component('locationDetails', {
     controller: ['$routeParams', 'Measurement',
         function ($routeParams, Measurement) {
             var self = this;
-            console.log($routeParams);
-            self.measurements = Measurement.points({'name': $routeParams.name, 'id': $routeParams.id});
+            self.stationData = Measurement.points({'name': $routeParams.name, 'id': $routeParams.id});
         }
     ]
 });

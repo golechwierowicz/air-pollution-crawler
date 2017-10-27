@@ -1,10 +1,9 @@
 package modules.rest.model;
 
-import java.util.List;
+import modules.rest.model.gios.Value;
 
 public class Measurement {
     public String measurementName;
-    public List<Double> measurementValue;
-    public List<Long> measurementTimes;
+    public Value[] values;
     public String[] attributes;
 }

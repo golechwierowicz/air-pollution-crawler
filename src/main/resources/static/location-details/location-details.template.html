@@ -1,1 +1,30 @@
-{{$ctrl.measurements | json}}
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-4">
+        <h2>{{$ctrl.stationData.stationName}}</h2>
+    </div>
+</div>
+<div class="row top-buffer">
+    <div class="col-md-10">
+        <div ng-repeat="measurement in $ctrl.stationData.measurements" class="top-buffer-2">
+            <div class="panel panel-default ">
+                <div class="panel-heading">{{measurement.measurementName}}</div>
+            </div>
+            <div class="measurement-scrollable-table">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="measurementValue in measurement.values">
+                        <td>{{measurementValue.date}}</td>
+                        <td>{{measurementValue.value}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

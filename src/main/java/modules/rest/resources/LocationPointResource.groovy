@@ -1,5 +1,7 @@
 package modules.rest.resources
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import modules.rest.model.IdStationLocator
 import modules.rest.service.GIOSCallerServiceImpl
 import org.slf4j.Logger
@@ -11,8 +13,8 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 @Path("rest")
-class RestResource {
-    static Logger log = LoggerFactory.getLogger(RestResource.class)
+class LocationPointResource {
+    static Logger log = LoggerFactory.getLogger(LocationPointResource.class)
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,6 +36,9 @@ class RestResource {
         def callerService = new GIOSCallerServiceImpl(new CallServiceImpl())
         def stationLocator = new IdStationLocator(id)
         stationLocator.stationName = name
-        return Response.status(Response.Status.OK).entity(callerService.getStationData(stationLocator)).build()
+        def data = callerService.getStationData(stationLocator)
+        def mapper = new ObjectMapper()
+        mapper.registerModule(new JodaModule())
+        return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(data)).build()
     }
 }
