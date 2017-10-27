@@ -5,7 +5,8 @@ angular.module('core.locationPoint').factory('LocationPoint', ['$resource',
         return $resource('api/rest/loc_points', {}, {
             query: {
                 method: 'GET',
-                isArray: true
+                isArray: true,
+                cache: true
             }
         });
     }
