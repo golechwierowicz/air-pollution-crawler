@@ -22,7 +22,9 @@
                 <tbody>
                     <tr ng-repeat="locationPoint in $ctrl.locationPoints | filter:$ctrl.query">
                         <td>{{locationPoint.id}}</td>
-                        <td>{{locationPoint.name}}</td>
+                        <td>
+                            <a href="#!/location_point/{{locationPoint.name}}/{{locationPoint.id}}">{{locationPoint.name}}</a>
+                        </td>
                         <td>{{locationPoint.latitude}}</td>
                         <td>{{locationPoint.longtitude}}</td>
                     </tr>

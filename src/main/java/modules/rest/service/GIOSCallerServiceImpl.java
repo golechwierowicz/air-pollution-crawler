@@ -110,7 +110,8 @@ public class GIOSCallerServiceImpl extends CallerService {
                         log.error("Err when mapping measurement dto", e);
                         return new Measurement();
                     }
-                    measurement.measurementValue = Stream.of(measurementDTO.getValues()).map(Value::getValue).collect(Collectors.toList());
+                    measurement.measurementValue = Arrays.stream(measurementDTO.getValues()).map(Value::getValue).collect(Collectors.toList());
+                    measurement.measurementTimes = Arrays.stream(measurementDTO.getValues()).map(p -> p.getDate().getMillis()).collect(Collectors.toList());
                     measurement.measurementName = measurementDTO.getKey();
                     return measurement;
                 }).collect(Collectors.toList());

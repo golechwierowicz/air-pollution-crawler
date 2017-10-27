@@ -3,6 +3,7 @@ package modules.rest.model.gios;
 public class MeasurementDTO {
     private String key;
     private Value[] values;
+
     public MeasurementDTO() {
     }
 
