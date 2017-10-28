@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import modules.crawler.model.CrawlingRequest;
 import modules.crawler.model.WebContent;
 import modules.crawler.service.CrawlerService;
+import utils.FixPolishSigns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,10 @@ public class SinglePageCrawlerActor extends AbstractActor {
                             result = result
                                     .stream()
                                     .filter(w -> w.containsWord(cr.getFilterWords()))
+                                    .map(w -> {
+                                        w.setCrawledUrl(cr.getUrl());
+                                        return w;
+                                    })
                                     .collect(Collectors.toList());
                         }
                         getContext().actorSelection(masterPath).tell(result, self());

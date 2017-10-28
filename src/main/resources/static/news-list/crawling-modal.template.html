@@ -1,0 +1,26 @@
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" ng-click="close(false)" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">Crawling...</h4>
+            </div>
+            <div class="modal-body">
+                <p>Crawler is aggregating results. <br/> After the progress bar disappears it is going fetch data you
+                    can click fetch additional results.</p>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="10"
+                         aria-valuemin="0" aria-valuemax="100" ng-style="{ 'width': ( getProgressVal() + '%' ) }">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-click="close(false)" data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

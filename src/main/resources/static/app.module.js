@@ -1,10 +1,13 @@
 'use strict';
 
-// Define the `phonecatApp` module
-angular.module('phonecatApp', [
+angular.module('airPollutionApp', [
     'ngRoute',
+    'ngCookies',
     'core',
     'locations',
     'locationDetails',
-    'locationMap'
+    'locationMap',
+    'newsList',
+    'angularModalService',
+    'crawlerConfig'
 ]);

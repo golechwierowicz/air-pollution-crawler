@@ -12,6 +12,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.traversal.DocumentTraversal;
 import org.w3c.dom.traversal.NodeFilter;
 import org.w3c.dom.traversal.NodeIterator;
+import utils.FixPolishSigns;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class CrawlerServiceImpl implements CrawlerService {
             org.w3c.dom.Document doc = cleanHtml.get();
             return xPathQueryService.query(XPath, doc)
                     .stream()
-                    .map(s -> new WebContent(s, webContent.getUrls(), XPath))
+                    .map(s -> new WebContent(FixPolishSigns.fix(s), webContent.getUrls(), XPath))
                     .collect(Collectors.toList());
         } else return new ArrayList<>();
     }

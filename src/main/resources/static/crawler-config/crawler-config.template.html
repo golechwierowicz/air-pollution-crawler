@@ -1,0 +1,78 @@
+<div class="row top-buffer">
+    <form>
+        <div class="form-group">
+            <label for="url">URL:</label>
+            <input type="text" class="form-control" id="url" ng-model="$ctrl.newCrawlingRequest.url">
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="$ctrl.newCrawlingRequest.filterByKeywordOnly">Use filter words
+                    only</label>
+            </div>
+        </div>
+        <div class="row bottom-buffer">
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label for="filter-word">Filter word:</label>
+                    <input type="text" class="form-control" id="filter-word" ng-model="$ctrl.filterWord"
+                           placeholder="Only websites with this word are going to be displayed">
+                    <button type="button" class="btn btn-default" ng-click="$ctrl.addFilterWord()">Add</button>
+                </div>
+                <div class="col-md-6">
+                    <label for="selected-words">Selected Words:</label>
+                    <ul class="list-group" id="selected-words">
+                        <li class="list-group-item clearfix"
+                            ng-repeat="word in $ctrl.newCrawlingRequest.filterWords track by $index">
+                            {{word}}
+                            <button type="button" class="btn btn-danger pull-right"
+                                    ng-click="$ctrl.removeWord($index)">
+                                Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group" ng-if="$ctrl.showXPath()">
+                <div class="col-md-6">
+                    <label for="xpath">XPath:</label>
+                    <input type="text" class="form-control" id="xpath" ng-model="$ctrl.xPath"
+                           placeholder="Input xpath here">
+                    <button type="button" class="btn btn-default" ng-click="$ctrl.addXPath()">Add</button>
+                </div>
+                <div class="col-md-6">
+                    <label for="selected-xpaths">Selected XPaths:</label>
+                    <ul class="list-group" id="selected-xpaths">
+                        <li class="list-group-item clearfix"
+                            ng-repeat="xpath in $ctrl.newCrawlingRequest.xPaths track by $index">
+                            {{xpath}}
+                            <button type="button" class="btn btn-danger pull-right"
+                                    ng-click="$ctrl.removeXPath($index)">
+                                Delete
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="$ctrl.newCrawlingRequest.throttlingEnabled">Enable
+                    throttling</label>
+            </div>
+        </div>
+        <div class="form-group" ng-if="$ctrl.newCrawlingRequest.throttlingEnabled">
+            <label for="throttling">Throttling seconds: </label>
+            <input type="number" class="form-control" id="throttling"
+                   ng-model="$ctrl.newCrawlingRequest.throttlingSeconds">
+        </div>
+        <div class="form-group">
+            <label for="depth">Depth: </label>
+            <input type="number" class="form-control" id="depth" ng-model="$ctrl.newCrawlingRequest.depth">
+        </div>
+
+
+        <button type="submit" class="btn btn-default" ng-click="$ctrl.saveConfig()">Submit</button>
+    </form>
+</div>

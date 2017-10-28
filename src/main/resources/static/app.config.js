@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('phonecatApp').config(['$locationProvider', '$routeProvider',
+angular.module('airPollutionApp').config(['$locationProvider', '$routeProvider',
     function ($locationProvider, $routeProvider) {
         $locationProvider.hashPrefix('!');
 
@@ -13,6 +13,12 @@ angular.module('phonecatApp').config(['$locationProvider', '$routeProvider',
             })
             .when('/map', {
                 template: '<location-map></location-map>'
+            })
+            .when('/crawler', {
+                template: '<news-list></news-list>'
+            })
+            .when('/config', {
+                template: '<crawler-config></crawler-config>'
             })
             .otherwise('/location_points');
     }

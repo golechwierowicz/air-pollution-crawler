@@ -10,6 +10,7 @@ import akka.util.Timeout;
 import com.google.common.collect.ImmutableList;
 import modules.crawler.model.CrawlingRequest;
 import modules.crawler.model.GetResult;
+import modules.crawler.model.RequestUUID;
 import modules.crawler.model.WebContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,9 @@ public class CrawlingResource {
     private static Logger log = LoggerFactory.getLogger(CrawlingResource.class);
 
     @POST
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public String crawl(CrawlingRequest crawlingRequest) {
+    public RequestUUID crawl(CrawlingRequest crawlingRequest) {
         log.info("Received crawling request: " + crawlingRequest.toString());
         UUID reqUUID = UUID.randomUUID();
         log.info("Assigned request with UUID: " + reqUUID);
@@ -39,7 +40,7 @@ public class CrawlingResource {
                 .getSystem()
                 .actorOf(props, crawlingRequest.getRequestUUID().toString());
         master.tell(crawlingRequest, null);
-        return reqUUID.toString();
+        return new RequestUUID(reqUUID.toString());
     }
 
     @GET

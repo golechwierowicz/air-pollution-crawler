@@ -6,12 +6,14 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "angular": "1.5.x",
-    "angular-resource": "1.5.x",
-    "angular-route": "1.5.x",
+    "angular": "1.6.x",
+    "angular-resource": "1.6.x",
+    "angular-route": "1.6.x",
     "bootstrap": "3.3.x",
     "ngmap": "^1.18.4",
     "jquery": "2.2.x",
-    "components-font-awesome": "^4.7.0"
+    "components-font-awesome": "^4.7.0",
+    "angular-modal-service": "^0.12.3",
+    "angular-cookies": "^1.6.x"
   }
 }

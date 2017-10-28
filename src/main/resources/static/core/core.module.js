@@ -1,4 +1,4 @@
 'use strict';
 
 // Define the `core` module
-angular.module('core', ['core.locationPoint', 'core.measurement']);
+angular.module('core', ['core.locationPoint', 'core.measurement', 'core.crawler']);

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="phonecatApp">
+<html lang="en" ng-app="airPollutionApp">
 <head>
     <meta charset="utf-8">
     <title>Air pollution crawler</title>
@@ -10,9 +10,11 @@
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/ngmap/build/scripts/ng-map.min.js"></script>
+    <script src="bower_components/angular-modal-service/dst/angular-modal-service.min.js"></script>
     <script src="app.module.js"></script>
     <script src="app.config.js"></script>
     <script src="core/core.module.js"></script>
@@ -21,16 +23,23 @@
     <script src="core/measurement/measurement.service.js"></script>
     <script src="core/location-point/location-point.module.js"></script>
     <script src="core/location-point/location-point.service.js"></script>
+    <script src="core/crawler/crawler.module.js"></script>
+    <script src="core/crawler/crawler.service.js"></script>
     <script src="location-list/location-list.module.js"></script>
     <script src="location-list/location-list.component.js"></script>
     <script src="location-details/location-details.module.js"></script>
     <script src="location-details/location-details.component.js"></script>
     <script src="location-map/location-map.module.js"></script>
     <script src="location-map/location-map.component.js"></script>
+    <script src="news-list/news-list.module.js"></script>
+    <script src="news-list/crawling-modal.controller.js"></script>
+    <script src="news-list/news-list.component.js"></script>
+    <script src="crawler-config/crawler-config.module.js"></script>
+    <script src="crawler-config/crawler-config.component.js"></script>
 </head>
 <body>
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="nav-side-menu">
             <div class="brand">Air pollution crawler</div>
             <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
@@ -38,7 +47,7 @@
             <div class="menu-list">
                 <ul id="menu-content" class="menu-content collapse out">
                     <li>
-                        <a href="#">
+                        <a href="#!/crawler">
                             <i class="fa fa-newspaper-o fa-lg"></i> News
                         </a>
                     </li>
@@ -53,7 +62,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="#!/config">
                             <i class="fa fa-cog fa-lg"></i> Configure
                         </a>
                     </li>
