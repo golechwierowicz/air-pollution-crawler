@@ -10,6 +10,7 @@
     "angular-resource": "1.5.x",
     "angular-route": "1.5.x",
     "bootstrap": "3.3.x",
+    "ngmap": "^1.18.4",
     "jquery": "2.2.x",
     "components-font-awesome": "^4.7.0"
   }

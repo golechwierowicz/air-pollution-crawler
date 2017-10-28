@@ -11,6 +11,9 @@ angular.module('phonecatApp').config(['$locationProvider', '$routeProvider',
             .when('/location_point/:name/:id', {
                 template: '<location-details></location-details>'
             })
+            .when('/map', {
+                template: '<location-map></location-map>'
+            })
             .otherwise('/location_points');
     }
 ]);

@@ -12,21 +12,21 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/ngmap/build/scripts/ng-map.min.js"></script>
     <script src="app.module.js"></script>
     <script src="app.config.js"></script>
     <script src="core/core.module.js"></script>
     <script src="core/checkmark/checkmark.filter.js"></script>
-    <script src="core/phone/phone.module.js"></script>
-    <script src="core/phone/phone.service.js"></script>
     <script src="core/measurement/measurement.module.js"></script>
     <script src="core/measurement/measurement.service.js"></script>
     <script src="core/location-point/location-point.module.js"></script>
     <script src="core/location-point/location-point.service.js"></script>
-    <script src="core/phone/phone.service.js"></script>
     <script src="location-list/location-list.module.js"></script>
     <script src="location-list/location-list.component.js"></script>
     <script src="location-details/location-details.module.js"></script>
     <script src="location-details/location-details.component.js"></script>
+    <script src="location-map/location-map.module.js"></script>
+    <script src="location-map/location-map.component.js"></script>
 </head>
 <body>
 <div class="row">
@@ -38,24 +38,25 @@
             <div class="menu-list">
                 <ul id="menu-content" class="menu-content collapse out">
                     <li>
+                        <a href="#">
+                            <i class="fa fa-newspaper-o fa-lg"></i> News
+                        </a>
+                    </li>
+                    <li>
                         <a href="#!/location_points">
                             <i class="fa fa-list fa-lg"></i> List
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="#!/map">
                             <i class="fa fa-map fa-lg"></i> Map
                         </a>
                     </li>
-                    <li data-toggle="collapse" data-target="#service" class="collapsed">
-                        <a href="#"><i class="fa fa-globe fa-lg"></i> Test <span class="arrow"></span></a>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-cog fa-lg"></i> Configure
+                        </a>
                     </li>
-                    <ul class="sub-menu collapse" id="service">
-                        <li>New Service 1</li>
-                        <li>New Service 2</li>
-                        <li>New Service 3</li>
-                    </ul>
-
                 </ul>
             </div>
         </div>

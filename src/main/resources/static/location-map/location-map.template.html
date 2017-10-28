@@ -1,0 +1,15 @@
+<div class="row top-buffer">
+    <h2>Stations map</h2>
+</div>
+<div class="row top-buffer bottom-buffer">
+    <div map-lazy-load="https://maps.google.com/maps/api/js"
+         map-lazy-load-params="{{googleMapsUrl}}">
+        <ng-map center="51.919438,19.14513599999998" zoom="7" id="locations">
+            <marker ng-repeat="p in $ctrl.locationPoints"
+                    position="{{[p.latitude, p.longtitude]}}"
+                    data="{{p}}"
+                    on-click="$ctrl.goToDetails()"
+                    title="{{p.name}}"></marker>
+        </ng-map>
+    </div>
+</div>

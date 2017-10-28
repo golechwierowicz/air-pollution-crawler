@@ -5,5 +5,6 @@ angular.module('phonecatApp', [
     'ngRoute',
     'core',
     'locations',
-    'locationDetails'
+    'locationDetails',
+    'locationMap'
 ]);

@@ -20,7 +20,7 @@
                     <tbody>
                     <tr ng-repeat="measurementValue in measurement.values">
                         <td>{{measurementValue.date}}</td>
-                        <td>{{measurementValue.value}}</td>
+                        <td>{{measurementValue.value | number : 2}}</td>
                     </tr>
                     </tbody>
                 </table>
