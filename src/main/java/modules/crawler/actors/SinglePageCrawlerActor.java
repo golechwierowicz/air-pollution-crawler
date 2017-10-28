@@ -43,8 +43,9 @@ public class SinglePageCrawlerActor extends AbstractActor {
                         List<WebContent> result = cr.isFilterByKeywordOnly() ?
                                 crawlerService.extractByFilterWordOnly(wc.get(), cr.getFilterWords())
                                 : extractByXPaths(wc.get(), cr.getxPaths());
+                        List<WebContent> toSend = result;
                         if (!cr.getFilterWords().isEmpty() && !cr.isFilterByKeywordOnly()) {
-                            result = result
+                            toSend = result
                                     .stream()
                                     .filter(w -> w.containsWord(cr.getFilterWords()))
                                     .map(w -> {
@@ -53,7 +54,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
                                     })
                                     .collect(Collectors.toList());
                         }
-                        getContext().actorSelection(masterPath).tell(result, self());
+                        getContext().actorSelection(masterPath).tell(toSend, self());
                         List<String> urls = result.size() > 0 ? result.get(0).getUrls() : ImmutableList.of();
                         int newDepth = cr.getDepth() - 1;
                         if (newDepth > 0) {

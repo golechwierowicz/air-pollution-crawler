@@ -1,5 +1,6 @@
 package modules.crawler.service;
 
+import com.google.common.collect.ImmutableList;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import modules.crawler.model.WebContent;
@@ -70,7 +71,7 @@ public class CrawlerServiceImpl implements CrawlerService {
                     .stream()
                     .map(s -> new WebContent(FixPolishSigns.fix(s), webContent.getUrls(), XPath))
                     .collect(Collectors.toList());
-        } else return new ArrayList<>();
+        } else return ImmutableList.of(new WebContent("", webContent.getUrls(), null));
     }
 
     @Override
