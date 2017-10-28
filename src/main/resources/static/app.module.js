@@ -9,5 +9,6 @@ angular.module('airPollutionApp', [
     'locationMap',
     'newsList',
     'angularModalService',
-    'crawlerConfig'
+    'crawlerConfig',
+    'ui.bootstrap'
 ]);

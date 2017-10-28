@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('locations', ['core.locationPoint']);
+angular.module('locations', ['core.locationPoint', 'ui.bootstrap']);

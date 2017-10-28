@@ -14,6 +14,7 @@
     "jquery": "2.2.x",
     "components-font-awesome": "^4.7.0",
     "angular-modal-service": "^0.12.3",
-    "angular-cookies": "^1.6.x"
+    "angular-cookies": "^1.6.x",
+    "angular-bootstrap": "^2.5.0"
   }
 }

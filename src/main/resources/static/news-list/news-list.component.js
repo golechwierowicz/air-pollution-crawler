@@ -21,6 +21,8 @@ angular.module('newsList').component('newsList', {
             this.cacheName = 'crawl';
             this.cache = $cacheFactory.get(this.cacheName) === undefined
                 ? $cacheFactory(this.cacheName) : $cacheFactory.get(this.cacheName);
+            this.currentPage = 1;
+            this.pageSize = 10;
 
             this.id = this.cache.get('id') === undefined ? '' : this.cache.get('id');
             this.result = this.cache.get('result') === undefined ? [] : this.cache.get('result');
@@ -46,9 +48,15 @@ angular.module('newsList').component('newsList', {
             this.getResult = function () {
                 Crawler.result.query({id: this.id}).$promise.then((data) => {
                     this.result = data;
+                    this.totalItems = data.length;
                     this.cache.put('result', data);
                     this.cache.put('id', this.id);
                 });
+            };
+
+            this.getCrawledContentDisplay = function() {
+                this.totalItems = this.result.length;
+                return this.result.slice((this.currentPage - 1) * this.pageSize, this.currentPage * this.pageSize);
             }
         }
     ]

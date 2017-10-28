@@ -2,7 +2,7 @@
     <div class="col-md-2 col-md-offset-4">
         <div class="input-group">
             <span class="input-group-addon" id="basic-addon3">Search</span>
-            <input type="text" class="form-control" ng-model="$ctrl.query">
+            <input type="text" class="form-control" ng-model="$ctrl.query" placeholder="By name">
         </div>
     </div>
 </div>
@@ -20,16 +20,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="locationPoint in $ctrl.locationPoints | filter:$ctrl.query">
-                        <td>{{locationPoint.id}}</td>
-                        <td>
-                            <a href="#!/location_point/{{locationPoint.name}}/{{locationPoint.id}}">{{locationPoint.name}}</a>
-                        </td>
-                        <td>{{locationPoint.latitude}}</td>
-                        <td>{{locationPoint.longtitude}}</td>
-                    </tr>
+                <tr ng-repeat="locationPoint in filterData = ($ctrl.locationPointsAll | filter:$ctrl.query) | limitTo:10:10*($ctrl.currentPage-1)">
+                    <td>{{locationPoint.id}}</td>
+                    <td>
+                        <a href="#!/location_point/{{locationPoint.name}}/{{locationPoint.id}}">{{locationPoint.name}}</a>
+                    </td>
+                    <td>{{locationPoint.latitude}}</td>
+                    <td>{{locationPoint.longtitude}}</td>
+                </tr>
                 </tbody>
             </table>
         </div>
+        <ul uib-pagination total-items="$ctrl.totalItems" ng-model="$ctrl.currentPage" max-size="$ctrl.maxSize"
+            class="pagination-sm" boundary-links="true" rotate="false" ng-change="$ctrl.getLocationPointDisplay()" force-ellipses="true"></ul>
     </div>
 </div>

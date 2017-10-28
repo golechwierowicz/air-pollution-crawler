@@ -15,7 +15,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="web in $ctrl.result">
+                <tr ng-repeat="web in $ctrl.getCrawledContentDisplay()">
                     <td>{{web.XPathUsed}}</td>
                     <td>
                         <a target="_blank" href="{{web.crawledUrl}}">{{web.crawledUrl}}</a>
@@ -25,5 +25,7 @@
                 </tbody>
             </table>
         </div>
+        <ul uib-pagination total-items="$ctrl.totalItems" ng-model="$ctrl.currentPage" max-size=5
+            class="pagination-sm" boundary-links="true" rotate="false" force-ellipses="true"></ul>
     </div>
 </div>
