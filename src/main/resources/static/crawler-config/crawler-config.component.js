@@ -6,6 +6,7 @@ angular.module('crawlerConfig').component('crawlerConfig', {
         function ($cookies, Crawler) {
             this.xPath = '';
             this.filterWord = '';
+            this.alerts = [];
 
             this.getCrawlingRequest = function () {
                 return Crawler.crawlingRequest;
@@ -22,6 +23,7 @@ angular.module('crawlerConfig').component('crawlerConfig', {
                 console.info('old', Crawler.crawlingRequest);
                 Crawler.crawlingRequest = this.newCrawlingRequest;
                 $cookies.putObject(Crawler.cookieKey, Crawler.crawlingRequest);
+                this.addAlert('Successfully saved crawling config');
             };
 
             this.showXPath = function () {
@@ -49,7 +51,15 @@ angular.module('crawlerConfig').component('crawlerConfig', {
 
             this.removeWord = function (index) {
                 this.newCrawlingRequest.filterWords.splice(index, 1);
-            }
+            };
+
+            this.addAlert = function (msg) {
+                this.alerts.push({type: 'success', msg: msg});
+            };
+
+            this.closeAlert = function (index) {
+                this.alerts.splice(index, 1);
+            };
         }
     ]
 });

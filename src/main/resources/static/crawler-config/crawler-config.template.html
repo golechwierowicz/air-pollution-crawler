@@ -1,3 +1,11 @@
+<div class="row">
+    <h2>Crawler configuration</h2>
+</div>
+<div class="row">
+    <div uib-alert ng-repeat="alert in $ctrl.alerts" ng-class="'alert-' + (alert.type)" close="$ctrl.closeAlert($index)">
+        {{alert.msg}}
+    </div>
+</div>
 <div class="row top-buffer">
     <form>
         <div class="form-group">
