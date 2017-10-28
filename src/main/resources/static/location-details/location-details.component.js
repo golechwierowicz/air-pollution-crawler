@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('locationDetails').component('locationDetails', {
-    templateUrl: 'location-details/crawler-config.template.html',
+    templateUrl: 'location-details/location-details.template.html',
     controller: ['$routeParams', 'Measurement',
         function ($routeParams, Measurement) {
             var self = this;
