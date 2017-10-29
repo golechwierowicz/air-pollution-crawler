@@ -1,6 +1,7 @@
 package modules.crawler.model;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
 
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class CrawlingRequest {
                            int depth,
                            UUID requestUUID,
                            boolean filterByKeywordOnly) {
+        Preconditions.checkArgument(depth > 0 && throttlingSeconds > 0, "Input time is negative.");
         this.filterWords = filterWords;
         this.url = url;
         this.xPaths = xPaths;
@@ -72,6 +74,7 @@ public class CrawlingRequest {
     }
 
     public void setDepth(int depth) {
+        Preconditions.checkArgument(depth > 0, "Must be greater than 0");
         this.depth = depth;
     }
 
@@ -92,6 +95,7 @@ public class CrawlingRequest {
     }
 
     public void setThrottlingSeconds(int throttlingSeconds) {
+        Preconditions.checkArgument(throttlingSeconds > 0, "Must be greater than 0");
         this.throttlingSeconds = throttlingSeconds;
     }
 
