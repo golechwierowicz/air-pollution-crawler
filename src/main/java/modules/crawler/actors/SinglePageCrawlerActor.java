@@ -55,7 +55,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
                                     .collect(Collectors.toList());
                         }
                         getContext().actorSelection(masterPath).tell(toSend, self());
-                        List<String> urls = result.size() > 0 ? result.get(0).getUrls() : ImmutableList.of();
+                        List<String> urls = wc.get().getUrls();
                         int newDepth = cr.getDepth() - 1;
                         if (newDepth > 0) {
                             for (String s : urls) {
