@@ -87,7 +87,7 @@ public class CrawlerServiceImpl implements CrawlerService {
                             WebContent.containsWord(filterWords, n.getTextContent())
                                     ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT, true);
             for (Node n = iterator.nextNode(); n != null; n = iterator.nextNode()) {
-                WebContent wc = new WebContent(FixPolishSigns.fix(n.getTextContent()),
+                WebContent wc = new WebContent(FixPolishSigns.fix(n.getTextContent()),  
                         webContent.getUrls(),
                         n.getBaseURI(),
                         webContent.getCrawledUrl());

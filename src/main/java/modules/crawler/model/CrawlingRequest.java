@@ -13,7 +13,7 @@ public class CrawlingRequest {
     private int throttlingSeconds;
     private int depth;
     private UUID requestUUID;
-    private boolean filterByKeywordOnly = false;
+    private boolean filterByKeywordOnly;
 
     public CrawlingRequest(List<String> filterWords,
                            String url,
@@ -35,30 +35,16 @@ public class CrawlingRequest {
 
     public CrawlingRequest() {}
 
-    public CrawlingRequest(String url,
-                           List<String> XPaths,
-                           boolean throttlingEnabled,
-                           int throttlingSeconds,
-                           int depth,
-                           List<String> filterWords,
-                           UUID requestUUID) {
-        this.url = url;
-        this.xPaths = XPaths;
-        this.throttlingEnabled = throttlingEnabled;
-        this.throttlingSeconds = throttlingSeconds;
-        this.depth = depth;
-        this.filterWords = filterWords;
-        this.requestUUID = requestUUID;
-    }
-
     public static CrawlingRequest copyCrawlingRequest(CrawlingRequest other) {
-        return new CrawlingRequest(other.url,
+        return new CrawlingRequest(
+                other.filterWords,
+                other.url,
                 other.xPaths,
                 other.throttlingEnabled,
                 other.throttlingSeconds,
                 other.depth,
-                other.filterWords,
-                other.requestUUID);
+                other.requestUUID,
+                other.filterByKeywordOnly);
     }
 
     public String getUrl() {

@@ -33,13 +33,14 @@ public class CrawlerMasterActorIT {
     public void testCrawlingDepthOne() throws Exception { // requires internet
         new TestKit(system) {{
             CrawlingRequest crawlingRequest = new CrawlingRequest(
+                    ImmutableList.of("smog"),
                     "http://www.tvn24.pl",
                     ImmutableList.of("//*/article/h1/a"),
                     false,
                     0,
                     1,
                     null,
-                    null);
+                    false);
             final Props props = Props.create(CrawlerMasterActor.class);
             final ActorRef master = system.actorOf(props);
             master.tell(crawlingRequest, getTestActor());
