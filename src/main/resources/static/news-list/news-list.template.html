@@ -2,7 +2,8 @@
     <h2>Newsfeed</h2>
 </div>
 <div class="row">
-    <div uib-alert ng-repeat="alert in $ctrl.alerts" ng-class="'alert-' + (alert.type)" close="$ctrl.closeAlert($index)">
+    <div uib-alert ng-repeat="alert in $ctrl.alerts" ng-class="'alert-' + (alert.type)"
+         close="$ctrl.closeAlert($index)">
         {{alert.msg}}
     </div>
 </div>
@@ -20,6 +21,7 @@
                     <th>XPath</th>
                     <th>URL</th>
                     <th>Content</th>
+                    <th>Copy to clipboard</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -28,7 +30,9 @@
                     <td>
                         <a target="_blank" href="{{web.crawledUrl}}">{{web.crawledUrl}}</a>
                     </td>
-                    <td class="text">{{web.content}}</td>
+                    <td class="text"><span>{{web.content}}</span></td>
+                    <td><span><button class="btn btn-success" ng-click="$ctrl.copy(web.content)"
+                                      tooltip-placement="bottom-left" uib-tooltip="{{web.content}}">Copy</button></span></td>
                 </tr>
                 </tbody>
             </table>

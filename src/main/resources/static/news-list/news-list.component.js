@@ -2,8 +2,8 @@
 
 angular.module('newsList').component('newsList', {
     templateUrl: 'news-list/news-list.template.html',
-    controller: ['$scope', '$cacheFactory', '$window' ,'Crawler', 'ModalService',
-        function ($scope, $cacheFactory, $window, Crawler, ModalService) {
+    controller: ['$scope', '$cacheFactory', '$window' ,'Crawler', 'ModalService', 'ngClipboard',
+        function ($scope, $cacheFactory, $window, Crawler, ModalService, ngClipboard) {
             this.showModal = function () {
                 ModalService.showModal({
                     templateUrl: "news-list/crawling-modal.template.html",
@@ -38,7 +38,7 @@ angular.module('newsList').component('newsList', {
                             this.cache.put('result', data);
                             this.cache.put('id', this.id);
                         });
-                        if (++this.timerCalled > 30) {
+                        if (++this.timerCalled > 10) {
                             $window.clearInterval(this.timer);
                         }
                     }, 1000);
@@ -80,6 +80,10 @@ angular.module('newsList').component('newsList', {
             this.closeAlert = function (index) {
                 this.alerts.splice(index, 1);
             };
+
+            this.copy = function(webContent) {
+                ngClipboard.toClipboard(webContent);
+            }
         }
     ]
 });
