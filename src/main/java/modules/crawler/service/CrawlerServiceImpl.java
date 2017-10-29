@@ -44,7 +44,7 @@ public class CrawlerServiceImpl implements CrawlerService {
                     .userAgent(userAgent).execute();
             String contentType = response.contentType();
 
-            if(!contentType.contains("text/html"))
+            if (!contentType.contains("text/html"))
                 return Optional.empty();
 
             Document doc = response.parse();
@@ -65,7 +65,7 @@ public class CrawlerServiceImpl implements CrawlerService {
     public List<WebContent> extractByXPath(WebContent webContent, String XPath) {
         assert xPathQueryService != null;
         Optional<org.w3c.dom.Document> cleanHtml = xPathQueryService.cleanHtml(webContent.getContent());
-        if(cleanHtml.isPresent()) {
+        if (cleanHtml.isPresent()) {
             org.w3c.dom.Document doc = cleanHtml.get();
             return xPathQueryService.query(XPath, doc)
                     .stream()
@@ -79,7 +79,7 @@ public class CrawlerServiceImpl implements CrawlerService {
         assert xPathQueryService != null;
         List<WebContent> result = new ArrayList<>();
         Optional<org.w3c.dom.Document> cleanHtml = xPathQueryService.cleanHtml(webContent.getContent());
-        if(cleanHtml.isPresent()) {
+        if (cleanHtml.isPresent()) {
             org.w3c.dom.Document doc = cleanHtml.get();
             DocumentTraversal traversal = (DocumentTraversal) doc;
             NodeIterator iterator = traversal.createNodeIterator(doc.getDocumentElement(),
