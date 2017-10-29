@@ -31,8 +31,9 @@
                         <a target="_blank" href="{{web.crawledUrl}}">{{web.crawledUrl}}</a>
                     </td>
                     <td class="text"><span>{{web.content}}</span></td>
-                    <td><span><button class="btn btn-success" ng-click="$ctrl.copy(web.content)"
-                                      tooltip-placement="bottom-left" uib-tooltip="{{web.content}}">Copy</button></span></td>
+                    <td><span><button class="btn btn-default" ng-click="$ctrl.copy(web.content)"
+                                      tooltip-placement="bottom-left" uib-tooltip="{{web.content}}"><i
+                            class="fa fa-files-o fa-lg" aria-hidden="true"></i></button></span></td>
                 </tr>
                 </tbody>
             </table>

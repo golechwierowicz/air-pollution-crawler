@@ -1,5 +1,7 @@
 package modules.crawler.resources;
 
+import akka.actor.Deploy;
+import modules.crawler.actors.ActorDeployment;
 import modules.crawler.actors.ActorSysContainer;
 import modules.crawler.actors.CrawlerMasterActor;
 import akka.actor.ActorRef;
@@ -34,7 +36,7 @@ public class CrawlingResource {
         log.info("Received crawling request: " + crawlingRequest.toString());
         UUID reqUUID = UUID.randomUUID();
         log.info("Assigned request with UUID: " + reqUUID);
-        final Props props = Props.create(CrawlerMasterActor.class);
+        final Props props = Props.create(CrawlerMasterActor.class).withDeploy(ActorDeployment.getRandomDeployment());
         crawlingRequest.setRequestUUID(reqUUID);
         final ActorRef master = ActorSysContainer.getInstance()
                 .getSystem()

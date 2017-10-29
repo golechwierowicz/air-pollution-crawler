@@ -1,5 +1,4 @@
 package modules.crawler.actors;
-
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -48,7 +47,7 @@ public class CrawlerMasterActor extends AbstractActor {
                 crawlerService,
                 requestUUID,
                 masterPath
-                ));
+                ).withDeploy(ActorDeployment.getRandomDeployment()));
 
         slaveActor.tell(crawlingRequest, getSelf());
     }

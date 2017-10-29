@@ -62,7 +62,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
                                         crawlerService,
                                         requestId,
                                         masterPath
-                                ));
+                                ).withDeploy(ActorDeployment.getRandomDeployment()));
                                 CrawlingRequest crNew = CrawlingRequest.copyCrawlingRequest(cr);
                                 crNew.setDepth(newDepth);
                                 crNew.setUrl(s);
