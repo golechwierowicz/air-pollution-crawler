@@ -9,12 +9,14 @@ import com.google.common.collect.ImmutableList;
 import modules.crawler.model.CrawlingRequest;
 import modules.crawler.model.WebContent;
 import modules.crawler.service.CrawlerService;
+import scala.concurrent.duration.FiniteDuration;
 import utils.FixPolishSigns;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class SinglePageCrawlerActor extends AbstractActor {
@@ -64,7 +66,17 @@ public class SinglePageCrawlerActor extends AbstractActor {
                                 CrawlingRequest crNew = CrawlingRequest.copyCrawlingRequest(cr);
                                 crNew.setDepth(newDepth);
                                 crNew.setUrl(s);
-                                slave.tell(crNew, getSelf());
+                                if (cr.isThrottlingEnabled()) {
+                                    getContext()
+                                            .getSystem()
+                                            .scheduler()
+                                            .scheduleOnce(new FiniteDuration(
+                                                            cr.getThrottlingSeconds(), TimeUnit.SECONDS),
+                                                    slave,
+                                                    crNew,
+                                                    getContext().getSystem().dispatcher(),
+                                                    self());
+                                } else slave.tell(crNew, getSelf());
                             }
                         }
                     }
