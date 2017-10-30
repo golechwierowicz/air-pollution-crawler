@@ -3,10 +3,11 @@ package modules.crawler.model;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-public class CrawlingRequest {
+public class CrawlingRequest implements Serializable {
     private List<String> filterWords;
     private String url;
     private List<String> xPaths;

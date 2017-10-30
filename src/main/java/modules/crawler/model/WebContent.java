@@ -2,10 +2,11 @@ package modules.crawler.model;
 
 import com.google.common.base.MoreObjects;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
-public class WebContent {
+public class WebContent implements Serializable {
     private String content;
     private List<String> urls;
     private String XPathUsed;

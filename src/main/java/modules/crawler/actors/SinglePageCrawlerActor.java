@@ -2,15 +2,14 @@ package modules.crawler.actors;
 
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
+import akka.actor.Deploy;
 import akka.actor.Props;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
-import com.google.common.collect.ImmutableList;
 import modules.crawler.model.CrawlingRequest;
 import modules.crawler.model.WebContent;
 import modules.crawler.service.CrawlerService;
 import scala.concurrent.duration.FiniteDuration;
-import utils.FixPolishSigns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,12 +56,13 @@ public class SinglePageCrawlerActor extends AbstractActor {
                         List<String> urls = wc.get().getUrls();
                         int newDepth = cr.getDepth() - 1;
                         if (newDepth > 0) {
+                            Deploy deployment = ActorDeployment.getRandomDeployment();
                             for (String s : urls) {
                                 ActorRef slave = getContext().actorOf(Props.create(SinglePageCrawlerActor.class,
                                         crawlerService,
                                         requestId,
                                         masterPath
-                                ).withDeploy(ActorDeployment.getRandomDeployment()));
+                                ).withDeploy(deployment));
                                 CrawlingRequest crNew = CrawlingRequest.copyCrawlingRequest(cr);
                                 crNew.setDepth(newDepth);
                                 crNew.setUrl(s);
