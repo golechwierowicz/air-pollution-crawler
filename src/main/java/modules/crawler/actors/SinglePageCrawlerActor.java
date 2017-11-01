@@ -79,6 +79,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
                                 } else slave.tell(crNew, getSelf());
                             }
                         }
+                        getContext().getSystem().stop(self());
                     }
                 })
                 .matchAny(any -> log.warning("Received unknown message...{}", any))
