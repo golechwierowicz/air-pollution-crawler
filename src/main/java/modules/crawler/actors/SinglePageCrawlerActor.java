@@ -1,12 +1,11 @@
 package modules.crawler.actors;
 
 import akka.actor.AbstractActor;
-import akka.actor.ActorRef;
-import akka.actor.Deploy;
-import akka.actor.Props;
+import akka.actor.ActorSelection;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import modules.crawler.model.CrawlingRequest;
+import modules.crawler.model.UpdateUrl;
 import modules.crawler.model.WebContent;
 import modules.crawler.service.CrawlerService;
 import scala.concurrent.duration.FiniteDuration;
@@ -40,7 +39,6 @@ public class SinglePageCrawlerActor extends AbstractActor {
                     log.info("Received message: {}", cr);
                     Optional<WebContent> wc = crawlerService.getWebPageContent(cr.getUrl());
                     if (wc.isPresent() && cr.getDepth() > 0) {
-
                         List<WebContent> result = cr.isFilterByKeywordOnly() ?
                                 crawlerService.extractByFilterWordOnly(wc.get(), cr.getFilterWords())
                                 : extractByXPaths(wc.get(), cr.getxPaths());
@@ -52,17 +50,13 @@ public class SinglePageCrawlerActor extends AbstractActor {
                                     .filter(w -> w.containsWord(cr.getFilterWords()))
                                     .collect(Collectors.toList());
                         }
-                        getContext().actorSelection(masterPath).tell(toSend, self());
+                        final ActorSelection master = getContext().actorSelection(masterPath);
+                        master.tell(toSend, self());
+                        master.tell(new UpdateUrl(cr.getUrl()), self());
                         List<String> urls = wc.get().getUrls();
                         int newDepth = cr.getDepth() - 1;
                         if (newDepth > 0) {
-                            Deploy deployment = ActorDeployment.getRandomDeployment();
                             for (String s : urls) {
-                                ActorRef slave = getContext().actorOf(Props.create(SinglePageCrawlerActor.class,
-                                        crawlerService,
-                                        requestId,
-                                        masterPath
-                                ).withDeploy(deployment));
                                 CrawlingRequest crNew = CrawlingRequest.copyCrawlingRequest(cr);
                                 crNew.setDepth(newDepth);
                                 crNew.setUrl(s);
@@ -72,14 +66,13 @@ public class SinglePageCrawlerActor extends AbstractActor {
                                             .scheduler()
                                             .scheduleOnce(new FiniteDuration(
                                                             cr.getThrottlingSeconds(), TimeUnit.SECONDS),
-                                                    slave,
+                                                    master.anchor(),
                                                     crNew,
                                                     getContext().getSystem().dispatcher(),
                                                     self());
-                                } else slave.tell(crNew, getSelf());
+                                } else master.tell(crNew, getSelf());
                             }
                         }
-                        getContext().getSystem().stop(self());
                     }
                 })
                 .matchAny(any -> log.warning("Received unknown message...{}", any))

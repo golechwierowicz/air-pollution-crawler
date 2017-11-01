@@ -1,4 +1,5 @@
 package modules.crawler.actors;
+
 import akka.actor.AbstractActor;
 import akka.actor.ActorRef;
 import akka.actor.Props;
@@ -6,34 +7,51 @@ import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import modules.crawler.model.CrawlingRequest;
 import modules.crawler.model.GetResult;
+import modules.crawler.model.UpdateUrl;
 import modules.crawler.model.WebContent;
 import modules.crawler.service.CrawlerService;
 import modules.crawler.service.CrawlerServiceImpl;
 import modules.crawler.service.XPathQueryServiceImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CrawlerMasterActor extends AbstractActor {
     private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
     private final List<WebContent> result = new ArrayList<>();
+    private final Set<String> crawledUrls = new HashSet<>();
+    private final UUID id;
+
+    public CrawlerMasterActor(UUID id) {
+        this.id = id;
+    }
 
     @Override
     public Receive createReceive() {
         return receiveBuilder()
-                .match(CrawlingRequest.class, this::crawl)
+                .match(CrawlingRequest.class, (cr -> {
+                    if (!crawled(cr.getUrl()))
+                        crawl(cr);
+                }))
                 .match(List.class, (list -> {
                     for (Object o : list) {
-                        if(o instanceof WebContent)
+                        if (o instanceof WebContent)
                             result.add((WebContent) o);
                     }
-                    log.info("Master state: " + result.size());
+                    log.info(String.format("Master identified with id: %s has content of size: %d",
+                            id.toString(),
+                            result.size()));
                 }))
                 .match(GetResult.class, (p -> {
                     p.result = result;
                     sender().tell(p, self());
                 }))
+                .match(UpdateUrl.class, (uu) -> {
+                    log.info(String.format("Master identified with id: %s has crawled urls of size: %d",
+                            id.toString(),
+                            crawledUrls.size()));
+
+                    crawledUrls.add(uu.url);
+                })
                 .matchAny(any -> log.info("Received unknown message...{}", any))
                 .build();
     }
@@ -47,8 +65,12 @@ public class CrawlerMasterActor extends AbstractActor {
                 crawlerService,
                 requestUUID,
                 masterPath
-                ).withDeploy(ActorDeployment.getRandomDeployment()));
+        ).withDeploy(ActorDeployment.getRandomDeployment()));
 
         slaveActor.tell(crawlingRequest, getSelf());
+    }
+
+    private boolean crawled(String url) {
+        return crawledUrls.contains(url);
     }
 }

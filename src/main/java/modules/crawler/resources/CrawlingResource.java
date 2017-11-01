@@ -36,12 +36,18 @@ public class CrawlingResource {
         log.info("Received crawling request: " + crawlingRequest.toString());
         UUID reqUUID = UUID.randomUUID();
         log.info("Assigned request with UUID: " + reqUUID);
-        final Props props = Props.create(CrawlerMasterActor.class).withDeploy(ActorDeployment.getRandomDeployment());
         crawlingRequest.setRequestUUID(reqUUID);
+
+        final Props props = Props
+                .create(CrawlerMasterActor.class, reqUUID)
+                .withDeploy(ActorDeployment.getRandomDeployment());
+
         final ActorRef master = ActorSysContainer.getInstance()
                 .getSystem()
                 .actorOf(props, crawlingRequest.getRequestUUID().toString());
+
         master.tell(crawlingRequest, null);
+
         return new RequestUUID(reqUUID.toString());
     }
 
