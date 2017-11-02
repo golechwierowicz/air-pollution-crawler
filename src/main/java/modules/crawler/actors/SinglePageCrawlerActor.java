@@ -52,7 +52,6 @@ public class SinglePageCrawlerActor extends AbstractActor {
                         }
                         final ActorSelection master = getContext().actorSelection(masterPath);
                         master.tell(toSend, self());
-                        master.tell(new UpdateUrl(cr.getUrl()), self());
                         List<String> urls = wc.get().getUrls();
                         int newDepth = cr.getDepth() - 1;
                         if (newDepth > 0) {

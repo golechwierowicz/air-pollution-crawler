@@ -45,13 +45,6 @@ public class CrawlerMasterActor extends AbstractActor {
                     p.result = result;
                     sender().tell(p, self());
                 }))
-                .match(UpdateUrl.class, (uu) -> {
-                    log.info(String.format("Master identified with id: %s has crawled urls of size: %d",
-                            id.toString(),
-                            crawledUrls.size()));
-
-                    crawledUrls.add(uu.url);
-                })
                 .matchAny(any -> log.info("Received unknown message...{}", any))
                 .build();
     }
@@ -66,7 +59,7 @@ public class CrawlerMasterActor extends AbstractActor {
                 requestUUID,
                 masterPath
         ).withDeploy(ActorDeployment.getRandomDeployment()));
-
+        crawledUrls.add(crawlingRequest.getUrl());
         slaveActor.tell(crawlingRequest, getSelf());
     }
 
