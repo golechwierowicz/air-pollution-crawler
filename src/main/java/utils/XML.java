@@ -12,28 +12,29 @@ import java.io.InputStream;
 
 /**
  * http://www.java2s.com/Code/Java/XML/NewDocumentFromInputStream.htm
+ *
  * @author Grzegorz Olechwierowicz
  * @since 24.04.2017.
  */
 public class XML {
-    public static Document newDocumentFromInputStream(InputStream in) {
-        DocumentBuilderFactory factory = null;
-        DocumentBuilder builder = null;
-        Document ret = null;
+  public static Document newDocumentFromInputStream(InputStream in) {
+    DocumentBuilderFactory factory = null;
+    DocumentBuilder builder = null;
+    Document ret = null;
 
-        try {
-            factory = DocumentBuilderFactory.newInstance();
-            builder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            assert builder != null;
-            ret = builder.parse(new InputSource(in));
-        } catch (SAXException | IOException e) {
-            e.printStackTrace();
-        }
-        return ret;
+    try {
+      factory = DocumentBuilderFactory.newInstance();
+      builder = factory.newDocumentBuilder();
+    } catch (ParserConfigurationException e) {
+      e.printStackTrace();
     }
+
+    try {
+      assert builder != null;
+      ret = builder.parse(new InputSource(in));
+    } catch (SAXException | IOException e) {
+      e.printStackTrace();
+    }
+    return ret;
+  }
 }

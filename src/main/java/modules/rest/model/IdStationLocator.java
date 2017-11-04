@@ -1,15 +1,15 @@
 package modules.rest.model;
 
 public class IdStationLocator extends StationLocator {
-    private int id;
+  private int id;
 
-    public IdStationLocator(int id) {
-        this.id = id;
-        setType();
-    }
+  public IdStationLocator(int id) {
+    this.id = id;
+    setType();
+  }
 
-    @Override
-    protected void setType() {
-        this.stationId = this.id;
-    }
+  @Override
+  protected void setType() {
+    this.stationId = this.id;
+  }
 }

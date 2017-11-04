@@ -4,5 +4,5 @@ import java.io.Serializable;
 import java.util.List;
 
 public class GetResult implements Serializable {
-    public List<WebContent> result;
+  public List<WebContent> result;
 }

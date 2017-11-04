@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class CallerService {
-    public abstract List<LocationPoint> getPointsByCountry(final String country) throws IOException;
-    public abstract StationData getStationData(final StationLocator stationLocator);
+  public abstract List<LocationPoint> getPointsByCountry(final String country) throws IOException;
+
+  public abstract StationData getStationData(final StationLocator stationLocator);
 }

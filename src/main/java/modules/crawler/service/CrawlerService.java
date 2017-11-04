@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CrawlerService {
-    Optional<WebContent> getWebPageContent(String url);
+  Optional<WebContent> getWebPageContent(String url);
 
-    List<WebContent> extractByXPath(WebContent webContent, String XPath);
+  List<WebContent> extractByXPath(WebContent webContent, String XPath);
 
-    List<WebContent> extractByFilterWordOnly(WebContent webContent, List<String> filterWords);
+  List<WebContent> extractByFilterWordOnly(WebContent webContent, List<String> filterWords);
 }

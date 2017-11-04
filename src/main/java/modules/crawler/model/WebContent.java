@@ -7,101 +7,100 @@ import java.util.List;
 import java.util.UUID;
 
 public class WebContent implements Serializable {
-    private String content;
-    private List<String> urls;
-    private String XPathUsed;
-    private UUID requestID;
-    private String crawledUrl;
+  private String content;
+  private List<String> urls;
+  private String XPathUsed;
+  private UUID requestID;
+  private String crawledUrl;
 
-    public WebContent(String content, List<String> urls) {
-        this.content = content;
-        this.urls = urls;
+  public WebContent(String content, List<String> urls) {
+    this.content = content;
+    this.urls = urls;
+  }
+
+  public WebContent(String content, List<String> urls, String xPath) {
+    this.content = content;
+    this.urls = urls;
+    this.XPathUsed = xPath;
+  }
+
+  public WebContent(String content, List<String> urls, String xPath, String crawledUrl) {
+    this.content = content;
+    this.urls = urls;
+    this.XPathUsed = xPath;
+    this.crawledUrl = crawledUrl;
+  }
+
+  public WebContent(String content) {
+    this.content = content;
+  }
+
+  public static boolean containsWord(List<String> words, String text) {
+    for (String word : words) {
+      if (text.contains(word)) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    public WebContent(String content, List<String> urls, String xPath) {
-        this.content = content;
-        this.urls = urls;
-        this.XPathUsed = xPath;
+  public String getContent() {
+    return content;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  public boolean containsWord(List<String> words) {
+    for (String word : words) {
+      if (content.contains(word)) {
+        return true;
+      }
     }
+    return false;
+  }
 
-    public WebContent(String content, List<String> urls, String xPath, String crawledUrl) {
-        this.content = content;
-        this.urls = urls;
-        this.XPathUsed = xPath;
-        this.crawledUrl = crawledUrl;
-    }
+  public List<String> getUrls() {
+    return urls;
+  }
 
-    public String getContent() {
-        return content;
-    }
+  public void setUrls(List<String> urls) {
+    this.urls = urls;
+  }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+  public String getXPathUsed() {
+    return XPathUsed;
+  }
 
-    public WebContent(String content) {
-        this.content = content;
-    }
+  public void setXPathUsed(String XPathUsed) {
+    this.XPathUsed = XPathUsed;
+  }
 
-    public boolean containsWord(List<String> words) {
-        for (String word : words) {
-            if(content.contains(word)) {
-                return true;
-            }
-        }
-        return false;
-    }
+  public UUID getRequestID() {
+    return requestID;
+  }
 
-    public List<String> getUrls() {
-        return urls;
-    }
+  public void setRequestID(UUID requestID) {
+    this.requestID = requestID;
+  }
 
-    public void setUrls(List<String> urls) {
-        this.urls = urls;
-    }
+  public String getCrawledUrl() {
+    return crawledUrl;
+  }
 
-    public String getXPathUsed() {
-        return XPathUsed;
-    }
+  public void setCrawledUrl(String crawledUrl) {
+    this.crawledUrl = crawledUrl;
+  }
 
-    public void setXPathUsed(String XPathUsed) {
-        this.XPathUsed = XPathUsed;
-    }
-
-    public void setRequestID(UUID requestID) {
-        this.requestID = requestID;
-    }
-
-    public UUID getRequestID() {
-        return requestID;
-    }
-
-    public String getCrawledUrl() {
-        return crawledUrl;
-    }
-
-    public void setCrawledUrl(String crawledUrl) {
-        this.crawledUrl = crawledUrl;
-    }
-
-    public static boolean containsWord(List<String> words, String text) {
-        for (String word : words) {
-            if(text.contains(word)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("content", content)
-                .add("urls", urls)
-                .add("XPathUsed", XPathUsed)
-                .add("requestID", requestID)
-                .add("crawledUrl", crawledUrl)
-                .toString();
-    }
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("content", content)
+        .add("urls", urls)
+        .add("XPathUsed", XPathUsed)
+        .add("requestID", requestID)
+        .add("crawledUrl", crawledUrl)
+        .toString();
+  }
 }

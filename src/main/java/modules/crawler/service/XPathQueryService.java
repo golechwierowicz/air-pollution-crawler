@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface XPathQueryService {
-    List<String> query(String xPath, Document document);
-    Optional<Document> cleanHtml(String dirtyHtml);
+  List<String> query(String xPath, Document document);
+
+  Optional<Document> cleanHtml(String dirtyHtml);
 }

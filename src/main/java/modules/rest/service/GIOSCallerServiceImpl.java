@@ -25,98 +25,98 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GIOSCallerServiceImpl extends CallerService {
-    private final static Config conf = ConfigFactory.load().getConfig("rest.gios");
-    private final static String HOST = String.format("http://%s", conf.getString("host"));
-    private final static Logger log = LoggerFactory.getLogger(GIOSCallerServiceImpl.class.getName());
-    private final CallService callService;
+  private final static Config conf = ConfigFactory.load().getConfig("rest.gios");
+  private final static String HOST = String.format("http://%s", conf.getString("host"));
+  private final static Logger log = LoggerFactory.getLogger(GIOSCallerServiceImpl.class.getName());
+  private final CallService callService;
 
-    public GIOSCallerServiceImpl(CallService callService) {
-        this.callService = callService;
+  public GIOSCallerServiceImpl(CallService callService) {
+    this.callService = callService;
+  }
+
+  @Override
+  public List<LocationPoint> getPointsByCountry(final String country) throws IOException {
+    String target = String.format("%s/%s", HOST, "station/findAll");
+    String content = callService.getContent(target);
+    return pointsDTOToLocationPoints(content);
+  }
+
+  @Override
+  public StationData getStationData(StationLocator stationLocator) {
+    Optional<Integer> stationIdOpt = stationLocator.getStationId();
+    if (!stationIdOpt.isPresent())
+      throw new WrongStationLocatorException("Expected int based locator, received string based");
+    int stationId = stationIdOpt.get();
+    String target = String.format("%s/%s/%d", HOST, "station/sensors", stationId);
+    String content = callService.getContent(target);
+    List<Sensor> sensorsForStation = mapSensorsDTOToSensors(content);
+    List<Measurement> measurements = fetchMeasurementsForSensors(sensorsForStation);
+    StationData stationData = new StationData();
+    stationData.measurements = measurements;
+    stationData.stationName = stationLocator.stationName;
+    return stationData;
+  }
+
+  private List<Sensor> mapSensorsDTOToSensors(String content) {
+    ObjectMapper mapper = new ObjectMapper();
+    Sensor[] sensors = new Sensor[0];
+    try {
+      sensors = mapper.readValue(content, Sensor[].class);
+    } catch (IOException e) {
+      log.error("Err mapping to sensors", e);
     }
+    return Arrays.asList(sensors);
+  }
 
-    @Override
-    public List<LocationPoint> getPointsByCountry(final String country) throws IOException {
-        String target = String.format("%s/%s", HOST, "station/findAll");
-        String content = callService.getContent(target);
-        return pointsDTOToLocationPoints(content);
-    }
+  private List<LocationPoint> pointsDTOToLocationPoints(final String content) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    LocationPointDTO[] points = mapper.readValue(content, LocationPointDTO[].class);
+    return Arrays.stream(points).map(p -> {
+      LocationPoint locationPoint = new LocationPoint();
+      locationPoint.setName(p.getStationName());
+      locationPoint.setValue(null);
+      locationPoint.setLatitude(p.getGegrLat());
+      locationPoint.setLongtitude(p.getGegrLon());
+      locationPoint.setId(p.getId());
+      return locationPoint;
+    }).collect(Collectors.toList());
+  }
 
-    @Override
-    public StationData getStationData(StationLocator stationLocator) {
-        Optional<Integer> stationIdOpt = stationLocator.getStationId();
-        if(!stationIdOpt.isPresent())
-            throw new WrongStationLocatorException("Expected int based locator, received string based");
-        int stationId = stationIdOpt.get();
-        String target = String.format("%s/%s/%d", HOST, "station/sensors", stationId);
-        String content = callService.getContent(target);
-        List<Sensor> sensorsForStation = mapSensorsDTOToSensors(content);
-        List<Measurement> measurements = fetchMeasurementsForSensors(sensorsForStation);
-        StationData stationData = new StationData();
-        stationData.measurements = measurements;
-        stationData.stationName = stationLocator.stationName;
-        return stationData;
-    }
+  private List<Measurement> fetchMeasurementsForSensors(List<Sensor> sensors) {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JodaModule());
 
-    private List<Sensor> mapSensorsDTOToSensors(String content) {
-        ObjectMapper mapper = new ObjectMapper();
-        Sensor[] sensors = new Sensor[0];
-        try {
-            sensors = mapper.readValue(content, Sensor[].class);
-        } catch (IOException e) {
-            log.error("Err mapping to sensors", e);
-        }
-        return Arrays.asList(sensors);
-    }
+    Stream<String> measurementsRaw = sensors
+        .stream()
+        .map(sensor -> callService.getContentAsync(createMeasurementTarget(sensor.getId())))
+        .map(mr -> {
+          String res = "";
+          try {
+            res = mr.get();
+          } catch (InterruptedException | ExecutionException e) {
+            log.error("Err", e);
+          }
+          return res;
+        });
 
-    private List<LocationPoint> pointsDTOToLocationPoints(final String content) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        LocationPointDTO[] points = mapper.readValue(content, LocationPointDTO[].class);
-        return Arrays.stream(points).map(p -> {
-            LocationPoint locationPoint = new LocationPoint();
-            locationPoint.setName(p.getStationName());
-            locationPoint.setValue(null);
-            locationPoint.setLatitude(p.getGegrLat());
-            locationPoint.setLongtitude(p.getGegrLon());
-            locationPoint.setId(p.getId());
-            return locationPoint;
+    return measurementsRaw
+        .map(m -> {
+          Measurement measurement = new Measurement();
+          MeasurementDTO measurementDTO;
+          try {
+            measurementDTO = mapper.readValue(m, MeasurementDTO.class);
+          } catch (IOException e) {
+            log.error("Err when mapping measurement dto", e);
+            return new Measurement();
+          }
+          measurement.values = measurementDTO.getValues();
+          measurement.measurementName = measurementDTO.getKey();
+          return measurement;
         }).collect(Collectors.toList());
-    }
+  }
 
-    private List<Measurement> fetchMeasurementsForSensors(List<Sensor> sensors) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JodaModule());
-
-        Stream<String> measurementsRaw = sensors
-                .stream()
-                .map(sensor -> callService.getContentAsync(createMeasurementTarget(sensor.getId())))
-                .map(mr -> {
-                    String res = "";
-                    try {
-                        res = mr.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        log.error("Err", e);
-                    }
-                    return res;
-                });
-
-        return measurementsRaw
-                .map(m -> {
-                    Measurement measurement = new Measurement();
-                    MeasurementDTO measurementDTO;
-                    try {
-                         measurementDTO = mapper.readValue(m, MeasurementDTO.class);
-                    } catch (IOException e) {
-                        log.error("Err when mapping measurement dto", e);
-                        return new Measurement();
-                    }
-                    measurement.values = measurementDTO.getValues();
-                    measurement.measurementName = measurementDTO.getKey();
-                    return measurement;
-                }).collect(Collectors.toList());
-    }
-
-    private String createMeasurementTarget(int id) {
-        return String.format("%s/%s/%d", HOST, "data/getData", id);
-    }
+  private String createMeasurementTarget(int id) {
+    return String.format("%s/%s/%d", HOST, "data/getData", id);
+  }
 
 }
