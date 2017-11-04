@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import scala.concurrent.duration.FiniteDuration;
 
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class CrawlerMasterActorIT {
@@ -41,7 +42,7 @@ public class CrawlerMasterActorIT {
                     1,
                     null,
                     false);
-            final Props props = Props.create(CrawlerMasterActor.class);
+            final Props props = Props.create(CrawlerMasterActor.class, UUID.randomUUID());
             final ActorRef master = system.actorOf(props);
             master.tell(crawlingRequest, getTestActor());
             Thread.sleep(2000);

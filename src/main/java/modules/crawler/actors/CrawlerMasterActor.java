@@ -32,10 +32,9 @@ public class CrawlerMasterActor extends AbstractActor {
             crawl(cr);
         }))
         .match(List.class, (list -> {
-          for (Object o : list) {
-            if (o instanceof WebContent)
-              result.add((WebContent) o);
-          }
+          list.stream()
+              .filter(o -> o instanceof WebContent)
+              .forEach(wc -> result.add((WebContent) wc));
           log.info(String.format("Master identified with id: %s has content of size: %d",
               id.toString(),
               result.size()));
