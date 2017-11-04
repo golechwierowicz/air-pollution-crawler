@@ -16,11 +16,11 @@ import java.util.logging.Logger;
 
 
 public class Boot {
-  private static final String BASE_URI = String.format("http://%s:%d/%s/", HOST, PORT, API_SUFFIX);
   private static Config conf = ConfigFactory.load().getConfig("grizzly");
   private static final String HOST = conf.getString("host");
   private static final int PORT = conf.getInt("port");
   private static final String API_SUFFIX = conf.getString("api_suffix");
+  private static final String BASE_URI = String.format("http://%s:%d/%s/", HOST, PORT, API_SUFFIX);
 
   private static HttpServer startServer() {
     final String[] packages = new String[]{"modules.crawler.resources", "modules.rest.resources"};
