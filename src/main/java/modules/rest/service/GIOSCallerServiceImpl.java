@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -89,15 +89,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     Stream<String> measurementsRaw = sensors
         .stream()
         .map(sensor -> callService.getContentAsync(createMeasurementTarget(sensor.getId())))
-        .map(mr -> {
-          String res = "";
-          try {
-            res = mr.get();
-          } catch (InterruptedException | ExecutionException e) {
-            log.error("Err", e);
-          }
-          return res;
-        });
+        .map(CompletableFuture::join);
 
     return measurementsRaw
         .map(m -> {

@@ -31,14 +31,14 @@ public class CrawlerMasterActor extends AbstractActor {
           if (!crawled(cr.getUrl()))
             crawl(cr);
         }))
-        .match(List.class, (list -> {
+        .match(List.class, (list) -> {
           list.stream()
               .filter(o -> o instanceof WebContent)
               .forEach(wc -> result.add((WebContent) wc));
           log.info(String.format("Master identified with id: %s has content of size: %d",
               id.toString(),
               result.size()));
-        }))
+        })
         .match(GetResult.class, (p -> {
           p.result = result;
           sender().tell(p, self());
