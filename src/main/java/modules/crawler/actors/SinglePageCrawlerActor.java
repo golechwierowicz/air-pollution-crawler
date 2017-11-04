@@ -5,17 +5,16 @@ import akka.actor.ActorSelection;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import modules.crawler.model.CrawlingRequest;
-import modules.crawler.model.UpdateUrl;
 import modules.crawler.model.WebContent;
 import modules.crawler.service.CrawlerService;
 import scala.concurrent.duration.FiniteDuration;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SinglePageCrawlerActor extends AbstractActor {
     private final LoggingAdapter log = Logging.getLogger(getContext().getSystem(), this);
@@ -79,13 +78,13 @@ public class SinglePageCrawlerActor extends AbstractActor {
     }
 
     private List<WebContent> extractByXPaths(WebContent webContent, List<String> XPaths) {
-        List<WebContent> result = new ArrayList<>();
-
-        for (String XPath : XPaths)
-            result.addAll(crawlerService.extractByXPath(webContent, XPath));
-
-        result.forEach(wc -> wc.setRequestID(requestId));
-
-        return result;
+        return XPaths
+                .stream()
+                .flatMap((xpath) -> crawlerService.extractByXPath(webContent, xpath).stream())
+                .map(wc -> {
+                    wc.setRequestID(requestId);
+                    return wc;
+                })
+                .collect(Collectors.toList());
     }
 }
