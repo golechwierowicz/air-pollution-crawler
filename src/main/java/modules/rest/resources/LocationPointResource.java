@@ -21,16 +21,16 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("rest")
-class LocationPointResource {
+public class LocationPointResource {
   private static Logger log = LoggerFactory.getLogger(LocationPointResource.class);
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/loc_points")
-  static Response getLocationsByCountry(@PathParam("country") String country) {
+  public Response getLocationsByCountry() {
     CallerService giosCallerService = new GIOSCallerServiceImpl(new CallServiceImpl());
     try {
-      return Response.status(Response.Status.OK).entity(giosCallerService.getPointsByCountry(country)).build();
+      return Response.status(Response.Status.OK).entity(giosCallerService.getPointsByCountry("")).build();
     } catch (IOException e) {
       log.error("Error io", e);
       return Response.status(Response.Status.BAD_GATEWAY).entity("Too much load").build();
@@ -40,7 +40,7 @@ class LocationPointResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/station/name/{name}/id/{id}/measurements")
-  static Response getMeasurementsForSenor(@PathParam("id") int id, @PathParam("name") String name) throws JsonProcessingException {
+  public Response getMeasurementsForSenor(@PathParam("id") int id, @PathParam("name") String name) throws JsonProcessingException {
     CallerService callerService = new GIOSCallerServiceImpl(new CallServiceImpl());
     StationLocator stationLocator = new IdStationLocator(id);
     stationLocator.stationName = name;
