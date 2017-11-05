@@ -4,8 +4,8 @@ import java.util.Optional;
 
 public abstract class StationLocator {
   public String stationName;
-  protected Integer stationId = null;
-  protected String stationCity = null;
+  Integer stationId = null;
+  String stationCity = null;
 
   public Optional<Integer> getStationId() {
     return Optional.ofNullable(stationId);
