@@ -4,6 +4,8 @@ import org.htmlcleaner.CleanerProperties;
 import org.htmlcleaner.DomSerializer;
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -13,19 +15,13 @@ import javax.xml.xpath.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 public class XPathQueryServiceImpl implements XPathQueryService {
-  private static Logger log = Logger.getLogger(XPathQueryServiceImpl.class.getName());
+  private static Logger log = LoggerFactory.getLogger(XPathQueryServiceImpl.class.getName());
 
   @Override
   public List<String> query(String query, Document document) {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setNamespaceAware(true);
-
-    XPathFactory xpathFactory = XPathFactory.newInstance();
-    XPath xpath = xpathFactory.newXPath();
-
+    XPath xpath = XPathFactory.newInstance().newXPath();
     return evaluate(document, xpath, query);
   }
 
@@ -41,30 +37,27 @@ public class XPathQueryServiceImpl implements XPathQueryService {
   }
 
   private List<String> evaluate(Document doc, XPath xpath, String query) {
-    List<String> evalued = new ArrayList<>();
+    List<String> evaluated = new ArrayList<>();
     NodeList result;
     try {
       XPathExpression expr =
           xpath.compile(query);
       result = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-      evalued = mapToNodesList(result);
+      evaluated = mapToNodesList(result);
     } catch (AssertionError ae) {
-      log.severe("XPath expression eval returned null.");
-      ae.printStackTrace();
+      log.warn("XPath expression eval returned null.", ae);
     } catch (XPathExpressionException e) {
-      log.severe("XPath expression was evaluated wrongly.");
-      e.printStackTrace();
+      log.warn("XPath expression was evaluated wrongly.");
     }
-    return evalued;
+    return evaluated;
   }
 
-  private List<String> mapToNodesList(NodeList input) {
-    List<String> result = new ArrayList<>();
+  private List<String> mapToNodesList(final NodeList input) {
     assert input != null;
     int size = input.getLength();
-    for (int i = 0; i < size; i++) {
+    List<String> result = new ArrayList<>(size);
+    for (int i = 0; i < size; i++)
       result.add(input.item(i).getTextContent());
-    }
     return result;
   }
 }

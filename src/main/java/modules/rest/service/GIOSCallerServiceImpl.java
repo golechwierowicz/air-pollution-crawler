@@ -68,7 +68,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     return Arrays.asList(sensors);
   }
 
-  private List<LocationPoint> pointsDTOToLocationPoints(final String content) throws IOException {
+  List<LocationPoint> pointsDTOToLocationPoints(final String content) throws IOException {
     ObjectMapper mapper = new ObjectMapper();
     LocationPointDTO[] points = mapper.readValue(content, LocationPointDTO[].class);
     return Arrays.stream(points).map(p -> {
@@ -82,7 +82,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     }).collect(Collectors.toList());
   }
 
-  private List<Measurement> fetchMeasurementsForSensors(List<Sensor> sensors) {
+  List<Measurement> fetchMeasurementsForSensors(List<Sensor> sensors) {
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JodaModule());
 
@@ -107,7 +107,7 @@ public class GIOSCallerServiceImpl extends CallerService {
         }).collect(Collectors.toList());
   }
 
-  private String createMeasurementTarget(int id) {
+  String createMeasurementTarget(int id) {
     return String.format("%s/%s/%d", HOST, "data/getData", id);
   }
 
