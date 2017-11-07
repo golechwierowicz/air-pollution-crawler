@@ -1,11 +1,22 @@
 package modules.rest.model;
 
+import modules.rest.model.gios.AirQualityIndex;
+
 public class LocationPoint {
   private int id;
   private double latitude;
   private double longtitude;
   private String name;
   private Long value;
+  private AirQualityIndex airQualityIndex;
+
+  public AirQualityIndex getAirQualityIndex() {
+    return airQualityIndex;
+  }
+
+  public void setAirQualityIndex(AirQualityIndex airQualityIndex) {
+    this.airQualityIndex = airQualityIndex;
+  }
 
   public double getLatitude() {
     return latitude;

@@ -19,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 @Path("rest")
 public class LocationPointResource {
@@ -30,9 +31,14 @@ public class LocationPointResource {
   public Response getLocationsByCountry() {
     CallerService giosCallerService = new GIOSCallerServiceImpl(new CallServiceImpl());
     try {
-      return Response.status(Response.Status.OK).entity(giosCallerService.getPointsByCountry("")).build();
+      ObjectMapper mapper = new ObjectMapper();
+      mapper.registerModule(new JodaModule());
+      return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(giosCallerService.getPointsByCountry(""))).build();
     } catch (IOException e) {
       log.error("Error io", e);
+      return Response.status(Response.Status.BAD_GATEWAY).entity("Too much load").build();
+    } catch (InterruptedException | ExecutionException e) {
+      log.error("e", e);
       return Response.status(Response.Status.BAD_GATEWAY).entity("Too much load").build();
     }
   }

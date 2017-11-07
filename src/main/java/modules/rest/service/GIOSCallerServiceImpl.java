@@ -10,6 +10,7 @@ import modules.rest.model.LocationPoint;
 import modules.rest.model.Measurement;
 import modules.rest.model.StationData;
 import modules.rest.model.StationLocator;
+import modules.rest.model.gios.AirQualityIndex;
 import modules.rest.model.gios.LocationPointDTO;
 import modules.rest.model.gios.MeasurementDTO;
 import modules.rest.model.gios.Sensor;
@@ -22,8 +23,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class GIOSCallerServiceImpl extends CallerService {
   private final static Config conf = ConfigFactory.load().getConfig("rest.gios");
@@ -36,10 +37,15 @@ public class GIOSCallerServiceImpl extends CallerService {
   }
 
   @Override
-  public List<LocationPoint> getPointsByCountry(final String country) throws IOException {
+  public List<LocationPoint> getPointsByCountry(final String country) throws IOException, ExecutionException, InterruptedException {
     String target = createTarget();
     String content = callService.getContent(target);
-    return pointsDTOToLocationPoints(content);
+    List<LocationPoint> locationPoints = pointsDTOToLocationPoints(content);
+    List<CompletableFuture<LocationPoint>> collect = locationPoints
+        .stream()
+        .map(this::joinWithAirQualityIdx)
+        .collect(Collectors.toList());
+    return allOf(collect).get();
   }
 
   @Override
@@ -59,7 +65,7 @@ public class GIOSCallerServiceImpl extends CallerService {
   }
 
   List<Measurement> fetchMeasurementsForSensors(List<Sensor> sensors) {
-    if(sensors == null)
+    if (sensors == null)
       return ImmutableList.of();
 
     ObjectMapper mapper = new ObjectMapper();
@@ -88,7 +94,7 @@ public class GIOSCallerServiceImpl extends CallerService {
   }
 
   private List<Sensor> mapSensorsDTOToSensors(String content) {
-    if(content == null)
+    if (content == null)
       return ImmutableList.of();
     ObjectMapper mapper = new ObjectMapper();
     Sensor[] sensors = new Sensor[0];
@@ -101,7 +107,7 @@ public class GIOSCallerServiceImpl extends CallerService {
   }
 
   private List<LocationPoint> pointsDTOToLocationPoints(final String content) throws IOException {
-    if(content == null)
+    if (content == null)
       return ImmutableList.of();
     ObjectMapper mapper = new ObjectMapper();
     LocationPointDTO[] points = mapper.readValue(content, LocationPointDTO[].class);
@@ -122,5 +128,36 @@ public class GIOSCallerServiceImpl extends CallerService {
 
   String createTarget() {
     return String.format("%s/%s", HOST, "station/findAll");
+  }
+
+  String airQualityIdxTarget(int id) {
+    return String.format("%s/%s/%d", HOST, "aqindex/getIndex", id);
+  }
+
+  private CompletableFuture<LocationPoint> joinWithAirQualityIdx(LocationPoint locationPoint) {
+    CompletableFuture<String> contentAsync = callService.getContentAsync(airQualityIdxTarget(locationPoint.getId()));
+    if (contentAsync == null)
+      return CompletableFuture.supplyAsync(() -> locationPoint);
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JodaModule());
+    return contentAsync.thenApply((aqidx) -> {
+      try {
+        AirQualityIndex airQualityIndex = mapper.readValue(aqidx, AirQualityIndex.class);
+        locationPoint.setAirQualityIndex(airQualityIndex);
+      } catch (IOException e) {
+        log.error("Cannot read air quality idx", e);
+      }
+      return locationPoint;
+    });
+  }
+
+  private <T> CompletableFuture<List<T>> allOf(List<CompletableFuture<T>> futuresList) {
+    CompletableFuture<Void> allFuturesResult =
+        CompletableFuture.allOf(futuresList.toArray(new CompletableFuture[futuresList.size()]));
+    return allFuturesResult.thenApply(v ->
+        futuresList.stream().
+            map(CompletableFuture::join).
+            collect(Collectors.<T>toList())
+    );
   }
 }

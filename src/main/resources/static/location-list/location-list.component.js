@@ -10,6 +10,11 @@ angular.module('locations').component('locationList', {
             this.pageSize = 10;
             this.currentPage = 1;
             this.totalItems = 1;
+            this.idxLevels = {
+                'Umiarkowany': 3,
+                'Dobry': 4,
+                'Bardzo dobry': 5
+            };
 
             this.getLocationPointDisplay = function () {
                 return this.locationPointsAll.slice(this.currentPage * this.pageSize, this.currentPage * this.pageSize + this.pageSize);
