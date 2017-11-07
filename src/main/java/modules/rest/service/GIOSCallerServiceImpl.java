@@ -2,6 +2,7 @@ package modules.rest.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.google.common.collect.ImmutableList;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import modules.rest.exceptions.WrongStationLocatorException;
@@ -36,7 +37,7 @@ public class GIOSCallerServiceImpl extends CallerService {
 
   @Override
   public List<LocationPoint> getPointsByCountry(final String country) throws IOException {
-    String target = String.format("%s/%s", HOST, "station/findAll");
+    String target = createTarget();
     String content = callService.getContent(target);
     return pointsDTOToLocationPoints(content);
   }
@@ -47,7 +48,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     if (!stationIdOpt.isPresent())
       throw new WrongStationLocatorException("Expected int based locator, received string based");
     int stationId = stationIdOpt.get();
-    String target = String.format("%s/%s/%d", HOST, "station/sensors", stationId);
+    String target = createStationData(stationId);
     String content = callService.getContent(target);
     List<Sensor> sensorsForStation = mapSensorsDTOToSensors(content);
     List<Measurement> measurements = fetchMeasurementsForSensors(sensorsForStation);
@@ -57,41 +58,16 @@ public class GIOSCallerServiceImpl extends CallerService {
     return stationData;
   }
 
-  private List<Sensor> mapSensorsDTOToSensors(String content) {
-    ObjectMapper mapper = new ObjectMapper();
-    Sensor[] sensors = new Sensor[0];
-    try {
-      sensors = mapper.readValue(content, Sensor[].class);
-    } catch (IOException e) {
-      log.error("Err mapping to sensors", e);
-    }
-    return Arrays.asList(sensors);
-  }
-
-  List<LocationPoint> pointsDTOToLocationPoints(final String content) throws IOException {
-    ObjectMapper mapper = new ObjectMapper();
-    LocationPointDTO[] points = mapper.readValue(content, LocationPointDTO[].class);
-    return Arrays.stream(points).map(p -> {
-      LocationPoint locationPoint = new LocationPoint();
-      locationPoint.setName(p.getStationName());
-      locationPoint.setValue(null);
-      locationPoint.setLatitude(p.getGegrLat());
-      locationPoint.setLongtitude(p.getGegrLon());
-      locationPoint.setId(p.getId());
-      return locationPoint;
-    }).collect(Collectors.toList());
-  }
-
   List<Measurement> fetchMeasurementsForSensors(List<Sensor> sensors) {
+    if(sensors == null)
+      return ImmutableList.of();
+
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JodaModule());
-
-    Stream<String> measurementsRaw = sensors
+    return sensors
         .stream()
         .map(sensor -> callService.getContentAsync(createMeasurementTarget(sensor.getId())))
-        .map(CompletableFuture::join);
-
-    return measurementsRaw
+        .map(CompletableFuture::join)
         .map(m -> {
           Measurement measurement = new Measurement();
           MeasurementDTO measurementDTO;
@@ -107,8 +83,44 @@ public class GIOSCallerServiceImpl extends CallerService {
         }).collect(Collectors.toList());
   }
 
+  String createStationData(int stationId) {
+    return String.format("%s/%s/%d", HOST, "station/sensors", stationId);
+  }
+
+  private List<Sensor> mapSensorsDTOToSensors(String content) {
+    if(content == null)
+      return ImmutableList.of();
+    ObjectMapper mapper = new ObjectMapper();
+    Sensor[] sensors = new Sensor[0];
+    try {
+      sensors = mapper.readValue(content, Sensor[].class);
+    } catch (IOException e) {
+      log.error("Err mapping to sensors", e);
+    }
+    return Arrays.asList(sensors);
+  }
+
+  private List<LocationPoint> pointsDTOToLocationPoints(final String content) throws IOException {
+    if(content == null)
+      return ImmutableList.of();
+    ObjectMapper mapper = new ObjectMapper();
+    LocationPointDTO[] points = mapper.readValue(content, LocationPointDTO[].class);
+    return Arrays.stream(points).map(p -> {
+      LocationPoint locationPoint = new LocationPoint();
+      locationPoint.setName(p.getStationName());
+      locationPoint.setValue(null);
+      locationPoint.setLatitude(p.getGegrLat());
+      locationPoint.setLongtitude(p.getGegrLon());
+      locationPoint.setId(p.getId());
+      return locationPoint;
+    }).collect(Collectors.toList());
+  }
+
   String createMeasurementTarget(int id) {
     return String.format("%s/%s/%d", HOST, "data/getData", id);
   }
 
+  String createTarget() {
+    return String.format("%s/%s", HOST, "station/findAll");
+  }
 }
