@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import modules.rest.model.*;
 import modules.rest.model.gios.Sensor;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 import utils.CallService;
@@ -72,10 +71,6 @@ public class GIOSCallerServiceImplTest {
     assertEquals(1, pointsByCountry.get(0).getId());
     assertEquals(2, pointsByCountry.get(1).getId());
     assertEquals(3, pointsByCountry.get(2).getId());
-  }
-
-  @Test
-  public void getStationData() throws Exception {
   }
 
   @Test
