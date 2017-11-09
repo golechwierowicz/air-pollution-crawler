@@ -1,0 +1,7 @@
+language: java
+jdk:
+    - oraclejdk8
+script:
+    - mvn clean install package
+after_success:
+    - bash <(echo hello)

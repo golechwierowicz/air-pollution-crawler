@@ -71,6 +71,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
               }
             }
           }
+          getContext().getSystem().stop(self());
         })
         .matchAny(any -> log.warning("Received unknown message...{}", any))
         .build();
@@ -80,10 +81,7 @@ public class SinglePageCrawlerActor extends AbstractActor {
     return XPaths
         .stream()
         .flatMap((xpath) -> crawlerService.extractByXPath(webContent, xpath).stream())
-        .map(wc -> {
-          wc.setRequestID(requestId);
-          return wc;
-        })
+        .peek(wc -> wc.setRequestID(requestId))
         .collect(Collectors.toList());
   }
 }
