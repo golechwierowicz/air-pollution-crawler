@@ -23,6 +23,6 @@ deploy:
   skip_cleanup: true
   script: |
       scp $TRAVIS_BUILD_DIR/target/air-pollution-crawler-1.0-SNAPSHOT-shaded.jar golechwi@51.254.121.242:build \
-      ssh golechwi@51.254.121.242 '/home/golechwi/run.sh'
+      ssh golechwi@51.254.121.242 '/home/golechwi/run.sh' \
   on:
     branch: master
