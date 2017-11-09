@@ -91,7 +91,7 @@ public class XPathQueryServiceImplTest {
 
     Optional<Document> document = xPathQueryService.cleanHtml(content);
     assertEquals(true, document.isPresent());
-    assertEquals(expected, DocToString(document.get()));
+    assertEquals(expected.replaceAll("\n|(\\s+)", ""), DocToString(document.get()).replaceAll("\n|(\\s+)", ""));
   }
 
   @Test
@@ -114,7 +114,7 @@ public class XPathQueryServiceImplTest {
 
     Optional<Document> document = xPathQueryService.cleanHtml(content);
     assertEquals(true, document.isPresent());
-    assertEquals(expected, DocToString(document.get()));
+    assertEquals(expected.replaceAll("\n|(\\s+)", ""), DocToString(document.get()).replaceAll("\n|(\\s+)", ""));
   }
 
   @Test
@@ -137,7 +137,7 @@ public class XPathQueryServiceImplTest {
 
     Optional<Document> document = xPathQueryService.cleanHtml(content);
     assertEquals(true, document.isPresent());
-    assertEquals(expected, DocToString(document.get()));
+    assertEquals(expected.replaceAll("\n|(\\s+)", ""), DocToString(document.get()).replaceAll("\n|(\\s+)", ""));
   }
 
   private String DocToString(Document doc) {
