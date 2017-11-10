@@ -20,5 +20,5 @@ jdk:
   - oraclejdk8
 language: java
 script:
-  - "bower install src/main/resources/static"
+  - "bower install $TRAVIS_BUILD_DIR/src/main/resources/static"
   - "mvn clean install package"
