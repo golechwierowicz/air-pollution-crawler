@@ -31,10 +31,6 @@ public class Boot {
   public static void main(String[] args) throws IOException {
     final HttpServer server = startServer();
     setUpGrizzly(server);
-    System.out.println(String.format("Jersey app started with WADL available at "
-        + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
-    System.in.read();
-    server.shutdown();
   }
 
   private static void setUpGrizzly(final HttpServer server) {
