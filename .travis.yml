@@ -7,6 +7,8 @@ before_deploy:
   - "chmod 400 /tmp/deploy_rsa"
   - "ssh-add /tmp/deploy_rsa"
   - "scp $TRAVIS_BUILD_DIR/target/air-pollution-crawler-1.0-SNAPSHOT-shaded.jar golechwi@51.254.121.242:build"
+before_script:
+  - npm install -g bower
 deploy:
   provider: script
   script: "ssh golechwi@51.254.121.242 '/home/golechwi/run.sh'"
