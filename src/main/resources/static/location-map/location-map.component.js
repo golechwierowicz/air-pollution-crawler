@@ -11,6 +11,21 @@ angular.module('locationMap').component('locationMap', {
             this.goToDetails = function() {
                 $window.location.href = '#!/location_point/' + this.data.name + '/' + this.data.id;
             };
+
+            this.determineMarkerColor = function(id) {
+                let url = 'https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_';
+                let suffix = '.png';
+                function combine(color) {
+                    return url + color + suffix;
+                }
+                if(id < 2) {
+                    return combine('green');
+                } else if(id >= 2 && id < 4) {
+                    return combine('yellow');
+                } else if(id >= 4) {
+                    return combine('black');
+                }
+            }
         }
     ]
 });
