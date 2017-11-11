@@ -1,16 +1,42 @@
 package modules.rest.model.gios;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import org.joda.time.DateTime;
 
+import javax.persistence.*;
+import java.util.List;
+import java.util.Set;
+
+@Entity
+@Table(name = "sensor")
 public class Sensor {
+  @Id
+  @Column(name = "s_id")
   private int id;
+  @Transient
   private int stationId;
   private Parameter param;
   @JsonIgnore
+  @Transient
   private DateTime sensorDateStart;
+  @Transient
   @JsonIgnore
   private DateTime sensorDateEnd;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "lp_id", nullable = false)
+  @JsonIgnore
+  private LocationPointDTO locationPointDTO;
+  @ManyToMany()
+  @JoinTable(
+      name="sensor_parameter",
+      joinColumns = { @JoinColumn(name="s_id")},
+      inverseJoinColumns = { @JoinColumn(name="p_id")}
+  )
+  private Set<Parameter> params;
+  @OneToMany(mappedBy = "measurement")
+  private List<Measurement> measurements;
 
   public Sensor() {
   }
@@ -53,5 +79,51 @@ public class Sensor {
 
   public void setSensorDateEnd(DateTime sensorDateEnd) {
     this.sensorDateEnd = sensorDateEnd;
+  }
+
+  public LocationPointDTO getLocationPointDTO() {
+    return locationPointDTO;
+  }
+
+  public void setLocationPointDTO(LocationPointDTO locationPointDTO) {
+    this.locationPointDTO = locationPointDTO;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("id", id)
+        .add("stationId", stationId)
+        .add("param", param)
+        .add("sensorDateStart", sensorDateStart)
+        .add("sensorDateEnd", sensorDateEnd)
+        .add("locationPointDTO", locationPointDTO)
+        .toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Sensor sensor = (Sensor) o;
+    return id == sensor.id &&
+        stationId == sensor.stationId &&
+        Objects.equal(param, sensor.param) &&
+        Objects.equal(sensorDateStart, sensor.sensorDateStart) &&
+        Objects.equal(sensorDateEnd, sensor.sensorDateEnd) &&
+        Objects.equal(locationPointDTO, sensor.locationPointDTO);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id, stationId, param, sensorDateStart, sensorDateEnd, locationPointDTO);
+  }
+
+  public Set<Parameter> getParams() {
+    return params;
+  }
+
+  public void setParams(Set<Parameter> params) {
+    this.params = params;
   }
 }

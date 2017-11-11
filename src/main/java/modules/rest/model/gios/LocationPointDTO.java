@@ -6,7 +6,7 @@ import com.google.common.base.Objects;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Table(name = "location_point")
@@ -21,7 +21,7 @@ public class LocationPointDTO {
   @Column(name = "lp_longitude")
   private double gegrLon;
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="c_id", nullable = false)
+  @JoinColumn(name = "c_id", nullable = false)
   private City city;
   @Column(name = "lp_street_address")
   private String addressStreet;
@@ -31,6 +31,9 @@ public class LocationPointDTO {
   @JsonIgnore
   @Transient
   private DateTime dateEnd;
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "location_point")
+  @JsonIgnore
+  private Set<Sensor> sensors;
 
   public LocationPointDTO() {
   }

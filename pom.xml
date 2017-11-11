@@ -206,5 +206,10 @@
       <version>1.4.196</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.0</version>
+    </dependency>
   </dependencies>
 </project>

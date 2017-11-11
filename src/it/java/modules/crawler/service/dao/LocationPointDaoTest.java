@@ -1,7 +1,7 @@
 package modules.crawler.service.dao;
 
 import modules.common.dao.HibernateSessionFactoryImpl;
-import modules.common.dao.LocationPointDao;
+import modules.common.dao.LocationPointDaoImpl;
 import modules.rest.model.gios.City;
 import modules.rest.model.gios.Commune;
 import modules.rest.model.gios.LocationPointDTO;
@@ -32,7 +32,7 @@ public class LocationPointDaoTest {
 
   @Test
   public void save() throws Exception {
-    LocationPointDao locationPointDao = new LocationPointDao(new HibernateSessionFactoryImpl());
+    LocationPointDaoImpl locationPointDao = new LocationPointDaoImpl(new HibernateSessionFactoryImpl());
     LocationPointDTO locationPointDTO = new LocationPointDTO();
     locationPointDTO.setId(1);
     locationPointDTO.setAddressStreet("sample_address");

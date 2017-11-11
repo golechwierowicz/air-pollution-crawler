@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.google.common.collect.ImmutableList;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import modules.common.utils.CallService;
 import modules.rest.exceptions.WrongStationLocatorException;
 import modules.rest.model.LocationPoint;
 import modules.rest.model.Measurement;
@@ -14,9 +15,9 @@ import modules.rest.model.gios.AirQualityIndex;
 import modules.rest.model.gios.LocationPointDTO;
 import modules.rest.model.gios.MeasurementDTO;
 import modules.rest.model.gios.Sensor;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import modules.common.utils.CallService;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -61,6 +62,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     StationData stationData = new StationData();
     stationData.measurements = measurements;
     stationData.stationName = stationLocator.stationName;
+    stationData.setStationId(stationId);
     return stationData;
   }
 
@@ -72,21 +74,25 @@ public class GIOSCallerServiceImpl extends CallerService {
     mapper.registerModule(new JodaModule());
     return sensors
         .stream()
-        .map(sensor -> callService.getContentAsync(createMeasurementTarget(sensor.getId())))
-        .map(CompletableFuture::join)
-        .map(m -> {
-          Measurement measurement = new Measurement();
-          MeasurementDTO measurementDTO;
-          try {
-            measurementDTO = mapper.readValue(m, MeasurementDTO.class);
-          } catch (IOException e) {
-            log.error("Err when mapping measurement dto", e);
-            return new Measurement();
-          }
-          measurement.values = measurementDTO.getValues();
-          measurement.measurementName = measurementDTO.getKey();
-          return measurement;
-        }).collect(Collectors.toList());
+        .map(sensor -> new ImmutablePair<>(sensor, callService.getContentAsync(createMeasurementTarget(sensor.getId()))))
+            .map(p -> new ImmutablePair<>(p.left, p.right.join()))
+            .map(p -> {
+              String m = p.right;
+              Sensor sensor = p.left;
+              Measurement measurement = new Measurement();
+              MeasurementDTO measurementDTO;
+              try {
+                measurementDTO = mapper.readValue(m, MeasurementDTO.class);
+
+              } catch (IOException e) {
+                log.error("Err when mapping measurement dto", e);
+                return new Measurement();
+              }
+              measurement.values = measurementDTO.getValues();
+              measurement.measurementName = measurementDTO.getKey();
+              measurement.id = sensor.getId();
+              return measurement;
+            }).collect(Collectors.toList());
   }
 
   String createStationData(int stationId) {
