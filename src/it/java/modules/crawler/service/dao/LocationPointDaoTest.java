@@ -1,5 +1,7 @@
-package modules.common.dao;
+package modules.crawler.service.dao;
 
+import modules.common.dao.HibernateSessionFactoryImpl;
+import modules.common.dao.LocationPointDao;
 import modules.rest.model.gios.City;
 import modules.rest.model.gios.Commune;
 import modules.rest.model.gios.LocationPointDTO;
