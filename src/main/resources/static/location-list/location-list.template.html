@@ -1,12 +1,7 @@
 <div class="row top-buffer">
-    <div class="col-md-2 col-md-offset-4">
-        <div class="input-group">
-            <span class="input-group-addon" id="basic-addon3">Search</span>
-            <input type="text" class="form-control" ng-model="$ctrl.query" placeholder="By name">
-        </div>
-    </div>
+    <h2>Stations list</h2>
 </div>
-<div class="row top-buffer">
+<div class="row top-buffer bottom-buffer">
     <div class="col-md-10">
         <div class="panel panel-default">
             <div class="panel-heading">Stations</div>
@@ -28,12 +23,18 @@
                     </td>
                     <td>{{locationPoint.latitude}}</td>
                     <td>{{locationPoint.longtitude}}</td>
-                    <td>{{locationPoint.airQualityIndex.stIndexLevel.indexLevelName}}</td>
+                    <td>
+                        <div ng-class="{'alert alert-success': $ctrl.isSuccess(locationPoint), 'alert alert-warning': $ctrl.isWarning(locationPoint), 'alert alert-error': $ctrl.isError(locationPoint)}"
+                             style="padding: 5px; margin-bottom: 0">
+                            {{locationPoint.airQualityIndex.stIndexLevel.indexLevelName}}
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
         <ul uib-pagination total-items="$ctrl.totalItems" ng-model="$ctrl.currentPage" max-size="$ctrl.maxSize"
-            class="pagination-sm" boundary-links="true" rotate="false" ng-change="$ctrl.getLocationPointDisplay()" force-ellipses="true"></ul>
+            class="pagination-sm" boundary-links="true" rotate="false" ng-change="$ctrl.getLocationPointDisplay()"
+            force-ellipses="true"></ul>
     </div>
 </div>

@@ -23,6 +23,29 @@ angular.module('locations').component('locationList', {
                 this.locationPointsAll = data;
                 this.totalItems = this.locationPointsAll.length;
             });
+
+            this.determineColor = function(id) {
+                if(id < 2) {
+                    return 'alert alert-success';
+                } else if(id >= 2 && id < 4) {
+                    return 'alert alert-warning';
+                } else if(id >= 4) {
+                    return 'alert    alert-danger';
+                }
+            };
+
+            this.isSuccess = function(locationPoint) {
+                return locationPoint.airQualityIndex.stIndexLevel.id < 2;
+            };
+
+            this.isWarning = function(locationPoint) {
+                const id = locationPoint.airQualityIndex.stIndexLevel.id;
+                return id >= 2 && id < 4;
+            };
+
+            this.isError = function(locationPoint) {
+                return locationPoint.airQualityIndex.stIndexLevel.id >= 4;
+            };
         }
     ]
 });

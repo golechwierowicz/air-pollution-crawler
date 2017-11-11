@@ -25,7 +25,9 @@ angular.module('locationMap').component('locationMap', {
                 } else if(id >= 4) {
                     return combine('black');
                 }
-            }
+            };
+
+
         }
     ]
 });
