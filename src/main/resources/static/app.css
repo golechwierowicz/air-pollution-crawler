@@ -146,7 +146,7 @@ ng-map#locations {
   -ms-transition: all 1s ease;
   transition: all 1s ease;
 }
-@media (max-width: 767px) {
+@media (max-width: 992px) {
   .nav-side-menu {
     position: relative;
     width: 100%;
@@ -172,7 +172,7 @@ ng-map#locations {
     line-height: 50px !important;
   }
 }
-@media (min-width: 767px) {
+@media (min-width: 992px) {
   .nav-side-menu .menu-list .menu-content {
     display: block;
   }
