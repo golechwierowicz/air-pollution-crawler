@@ -2,19 +2,36 @@ package modules.rest.model.gios;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import org.joda.time.DateTime;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "location_point")
 public class LocationPointDTO {
+  @Id
+  @Column(name = "lp_id")
   private int id;
+  @Column(name = "lp_station_name")
   private String stationName;
+  @Column(name = "lp_latitude")
   private double gegrLat;
+  @Column(name = "lp_longitude")
   private double gegrLon;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name="c_id", nullable = false)
   private City city;
+  @Column(name = "lp_street_address")
   private String addressStreet;
   @JsonIgnore
+  @Transient
   private DateTime dateStart;
   @JsonIgnore
+  @Transient
   private DateTime dateEnd;
+
   public LocationPointDTO() {
   }
 
@@ -94,5 +111,25 @@ public class LocationPointDTO {
         .add("dateStart", dateStart)
         .add("dateEnd", dateEnd)
         .toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    LocationPointDTO that = (LocationPointDTO) o;
+    return id == that.id &&
+        Double.compare(that.gegrLat, gegrLat) == 0 &&
+        Double.compare(that.gegrLon, gegrLon) == 0 &&
+        Objects.equal(stationName, that.stationName) &&
+        Objects.equal(city, that.city) &&
+        Objects.equal(addressStreet, that.addressStreet) &&
+        Objects.equal(dateStart, that.dateStart) &&
+        Objects.equal(dateEnd, that.dateEnd);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id, stationName, gegrLat, gegrLon, city, addressStreet, dateStart, dateEnd);
   }
 }

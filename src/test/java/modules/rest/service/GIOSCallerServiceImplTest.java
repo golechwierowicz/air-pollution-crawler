@@ -6,7 +6,7 @@ import modules.rest.model.gios.Sensor;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import utils.CallService;
+import modules.common.utils.CallService;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

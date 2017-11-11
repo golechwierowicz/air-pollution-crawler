@@ -2,7 +2,9 @@ package modules.rest.model.gios;
 
 import com.google.common.base.MoreObjects;
 
-public class Commune {
+import java.io.Serializable;
+
+public class Commune implements Serializable {
   private String communeName;
   private String districtName;
   private String provinceName;

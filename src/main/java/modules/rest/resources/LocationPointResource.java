@@ -10,7 +10,7 @@ import modules.rest.service.CallerService;
 import modules.rest.service.GIOSCallerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.CallServiceImpl;
+import modules.common.utils.CallServiceImpl;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

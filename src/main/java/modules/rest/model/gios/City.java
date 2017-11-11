@@ -1,11 +1,24 @@
 package modules.rest.model.gios;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 
+import javax.persistence.*;
+import java.util.Set;
+
+@Entity
+@Table(name = "city")
 public class City {
+  @Id
+  @Column(name = "c_id")
   private int id;
+  @Column(name = "c_name")
   private String name;
+  @Column(name = "c_commune")
   private Commune commune;
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "city")
+  @JsonIgnore
+  private Set<LocationPointDTO> locationPointDTOSet;
   public City() {
   }
 

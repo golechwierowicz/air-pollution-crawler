@@ -1,4 +1,4 @@
-package utils;
+package modules.common.utils;
 
 import java.util.concurrent.CompletableFuture;
 
