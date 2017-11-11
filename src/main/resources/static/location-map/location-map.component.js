@@ -13,8 +13,8 @@ angular.module('locationMap').component('locationMap', {
             };
 
             this.determineMarkerColor = function(id) {
-                let url = 'https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_';
-                let suffix = '.png';
+                const url = 'https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_';
+                const suffix = '.png';
                 function combine(color) {
                     return url + color + suffix;
                 }
