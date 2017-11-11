@@ -24,7 +24,7 @@
                     <td>{{locationPoint.latitude}}</td>
                     <td>{{locationPoint.longtitude}}</td>
                     <td>
-                        <div ng-class="{'alert alert-success': $ctrl.isSuccess(locationPoint), 'alert alert-warning': $ctrl.isWarning(locationPoint), 'alert alert-error': $ctrl.isError(locationPoint)}"
+                        <div ng-class="{'alert alert-success': $ctrl.isSuccess(locationPoint), 'alert alert-warning': $ctrl.isWarning(locationPoint), 'alert alert-danger': $ctrl.isError(locationPoint)}"
                              style="padding: 5px; margin-bottom: 0">
                             {{locationPoint.airQualityIndex.stIndexLevel.indexLevelName}}
                         </div>
