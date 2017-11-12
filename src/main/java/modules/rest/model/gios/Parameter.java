@@ -4,25 +4,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name="parameter")
+@Table(name = "parameter")
 public class Parameter {
-  @Column(name="p_id")
+  @Column(name = "p_id")
+  @Id
   private int idParam;
-  @Column(name="p_name")
+  @Column(name = "p_name")
   private String paramName;
-  @Column(name="p_formula")
+  @Column(name = "p_formula")
   private String paramFormula;
-  @Column(name="p_code")
+  @Column(name = "p_code")
   private String paramCode;
   @JsonIgnore
-  @ManyToMany(mappedBy = "sensor")
+  @ManyToMany(mappedBy = "params")
   private Set<Sensor> sensors;
 
   public Parameter() {
@@ -94,5 +92,13 @@ public class Parameter {
         .add("paramCode", paramCode)
         .add("sensors", sensors)
         .toString();
+  }
+
+  public int getId() {
+    return idParam;
+  }
+
+  public void setId(int id) {
+    this.idParam = id;
   }
 }

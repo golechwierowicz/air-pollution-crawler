@@ -1,6 +1,7 @@
 package modules.common.dao;
 
 import modules.rest.model.StationData;
+import modules.rest.model.gios.Sensor;
 
 import java.util.List;
 

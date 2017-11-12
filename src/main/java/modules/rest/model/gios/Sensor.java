@@ -17,6 +17,7 @@ public class Sensor {
   private int id;
   @Transient
   private int stationId;
+  @Transient
   private Parameter param;
   @JsonIgnore
   @Transient
@@ -34,8 +35,10 @@ public class Sensor {
       joinColumns = { @JoinColumn(name="s_id")},
       inverseJoinColumns = { @JoinColumn(name="p_id")}
   )
+  @JsonIgnore
   private Set<Parameter> params;
-  @OneToMany(mappedBy = "measurement")
+  @OneToMany(mappedBy = "sensor")
+  @JsonIgnore
   private List<Measurement> measurements;
 
   public Sensor() {

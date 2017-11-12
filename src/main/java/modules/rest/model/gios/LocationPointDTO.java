@@ -31,8 +31,8 @@ public class LocationPointDTO {
   @JsonIgnore
   @Transient
   private DateTime dateEnd;
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "location_point")
   @JsonIgnore
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "locationPointDTO")
   private Set<Sensor> sensors;
 
   public LocationPointDTO() {

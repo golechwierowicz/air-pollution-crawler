@@ -16,7 +16,7 @@ public class Measurement {
   private double value;
   @Column(name="timestamp")
   private DateTime timestamp;
-  @ManyToOne()
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name="s_id", nullable = false)
   private Sensor sensor;
 
