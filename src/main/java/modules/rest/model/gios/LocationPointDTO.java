@@ -135,4 +135,12 @@ public class LocationPointDTO {
   public int hashCode() {
     return Objects.hashCode(id, stationName, gegrLat, gegrLon, city, addressStreet, dateStart, dateEnd);
   }
+
+  public Set<Sensor> getSensors() {
+    return sensors;
+  }
+
+  public void setSensors(Set<Sensor> sensors) {
+    this.sensors = sensors;
+  }
 }

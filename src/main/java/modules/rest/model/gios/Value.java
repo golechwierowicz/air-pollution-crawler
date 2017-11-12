@@ -14,6 +14,11 @@ public class Value {
   public Value() {
   }
 
+  public Value(DateTime date, double value) {
+    this.date = date;
+    this.value = value;
+  }
+
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
   public DateTime getDate() {
     return date;

@@ -44,6 +44,15 @@ public class Sensor {
   public Sensor() {
   }
 
+  public Sensor(int id, int stationId, Parameter param, LocationPointDTO locationPointDTO, Set<Parameter> params, List<Measurement> measurements) {
+    this.id = id;
+    this.stationId = stationId;
+    this.param = param;
+    this.locationPointDTO = locationPointDTO;
+    this.params = params;
+    this.measurements = measurements;
+  }
+
   public int getId() {
     return id;
   }
@@ -128,5 +137,13 @@ public class Sensor {
 
   public void setParams(Set<Parameter> params) {
     this.params = params;
+  }
+
+  public List<Measurement> getMeasurements() {
+    return measurements;
+  }
+
+  public void setMeasurements(List<Measurement> measurements) {
+    this.measurements = measurements;
   }
 }

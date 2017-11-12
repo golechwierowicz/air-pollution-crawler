@@ -106,5 +106,9 @@
     <orderEntry type="library" name="Maven: org.postgresql:postgresql:42.1.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.h2database:h2:1.4.196" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jadira.usertype:usertype.core:6.0.1.GA" level="project" />
+    <orderEntry type="library" name="Maven: org.hibernate:hibernate-entitymanager:5.2.1.Final" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.geronimo.specs:geronimo-jta_1.1_spec:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jadira.usertype:usertype.spi:6.0.1.GA" level="project" />
   </component>
 </module>

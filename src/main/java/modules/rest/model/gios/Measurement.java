@@ -2,25 +2,34 @@ package modules.rest.model.gios;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name="measurement")
+@Table(name = "measurement")
 public class Measurement {
   @Id
-  @Column(name="m_id")
+  @Column(name = "m_id")
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
-  @Column(name="m_value")
+  @Column(name = "m_value")
   private double value;
-  @Column(name="timestamp")
+  @Column(name = "m_timestamp")
+  @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
   private DateTime timestamp;
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name="s_id", nullable = false)
+  @JoinColumn(name = "s_id", nullable = false)
   private Sensor sensor;
 
   public Measurement() {
+  }
+
+  public Measurement(double value, DateTime timestamp, Sensor sensor) {
+    this.value = value;
+    this.timestamp = timestamp;
+    this.sensor = sensor;
   }
 
   @Override
@@ -47,5 +56,37 @@ public class Measurement {
         .add("timestamp", timestamp)
         .add("sensor", sensor)
         .toString();
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public void setValue(double value) {
+    this.value = value;
+  }
+
+  public void setTimestamp(DateTime timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public void setSensor(Sensor sensor) {
+    this.sensor = sensor;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public double getValue() {
+    return value;
+  }
+
+  public DateTime getTimestamp() {
+    return timestamp;
+  }
+
+  public Sensor getSensor() {
+    return sensor;
   }
 }
