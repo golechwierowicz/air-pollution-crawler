@@ -1,4 +1,4 @@
-package modules.crawler.service.dao;
+package modules.common.dao;
 
 import modules.common.dao.HibernateSessionFactory;
 import modules.rest.model.gios.City;

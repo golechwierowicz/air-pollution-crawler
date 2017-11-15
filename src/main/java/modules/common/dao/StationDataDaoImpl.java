@@ -74,7 +74,20 @@ public class StationDataDaoImpl implements StationDataDao {
 
   @Override
   public List<StationData> getAll() {
-    return null;
+    Session session = hibernateSessionFactory.getInstance().openSession();
+
+    String hql = "from location_point lp left outer join city ci on ci.c_id = lp.c_id " +
+        "inner join sensor s on lp.lp_id = s.lp_id join measurement me on s.s_id = me.s_id";
+    List list = session.createQuery(hql).list();
+    for(Object obj : list) {
+      Object[] row = (Object[]) obj;
+      LocationPointDTO locationPointDTO = (LocationPointDTO) row[0];
+      City city = (City) row[1];
+      Sensor sensor = (Sensor) row[2];
+      Measurement measurement = (Measurement) row[3];
+    }
+    session.close();
+    return ImmutableList.of();
   }
 
   @Override

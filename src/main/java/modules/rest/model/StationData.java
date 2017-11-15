@@ -1,7 +1,6 @@
 package modules.rest.model;
 
 import modules.rest.model.gios.City;
-
 import java.util.List;
 
 public class StationData {
@@ -12,7 +11,6 @@ public class StationData {
   public int getStationId() {
     return stationId;
   }
-
   public void setStationId(int stationId) {
     this.stationId = stationId;
   }

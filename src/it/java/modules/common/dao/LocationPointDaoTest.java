@@ -1,4 +1,4 @@
-package modules.crawler.service.dao;
+package modules.common.dao;
 
 import modules.common.dao.HibernateSessionFactoryImpl;
 import modules.common.dao.LocationPointDaoImpl;
