@@ -7,10 +7,12 @@ import modules.rest.model.gios.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StationDataDaoImpl implements StationDataDao {
   private HibernateSessionFactory hibernateSessionFactory;
@@ -33,6 +35,9 @@ public class StationDataDaoImpl implements StationDataDao {
         .stream()
         .map(m -> {
           Sensor sensor = new Sensor(m.id, stationData.getStationId(), null, locationPoint, ImmutableSet.of(), null);
+          Parameter parameter = new Parameter();
+          parameter.setParamName(m.measurementName);
+          sensor.setParam(parameter);
           List<Measurement> measurements = valuesToMeasurements(sensor, Arrays.asList(m.values));
           sensor.setMeasurements(measurements);
           assert sensor.getMeasurements() != null;
@@ -66,28 +71,46 @@ public class StationDataDaoImpl implements StationDataDao {
       return ImmutableList.of();
 
     return values.stream()
-        .map(v ->
-            new Measurement(v.getValue(), v.getDate(), sensor)
-        )
+        .map(v -> new Measurement(v.getValue(), v.getDate(), sensor))
         .collect(Collectors.toList());
   }
 
   @Override
-  public List<StationData> getAll() {
+  public Stream<StationData> getAll() {
     Session session = hibernateSessionFactory.getInstance().openSession();
+    CriteriaQuery<LocationPointDTO> criteriaQuery = session.getCriteriaBuilder().createQuery(LocationPointDTO.class);
+    criteriaQuery
+        .from(LocationPointDTO.class)
+        .join("city")
+        .join("sensors")
+        .join("params")
+        .join("measurements");
 
-    String hql = "from location_point lp left outer join city ci on ci.c_id = lp.c_id " +
-        "inner join sensor s on lp.lp_id = s.lp_id join measurement me on s.s_id = me.s_id";
-    List list = session.createQuery(hql).list();
-    for(Object obj : list) {
-      Object[] row = (Object[]) obj;
-      LocationPointDTO locationPointDTO = (LocationPointDTO) row[0];
-      City city = (City) row[1];
-      Sensor sensor = (Sensor) row[2];
-      Measurement measurement = (Measurement) row[3];
-    }
+    Stream<LocationPointDTO> locationPointDTOS = session.createQuery(criteriaQuery).getResultList().stream();
+    Stream<StationData> stationDataStream = locationPointDTOS.map(locationPointDTO -> {
+      StationData stationData = new StationData();
+      stationData.stationName = locationPointDTO.getStationName();
+      stationData.city = locationPointDTO.getCity();
+      stationData.setStationId(locationPointDTO.getId());
+      stationData.measurements = locationPointDTO
+          .getSensors()
+          .stream()
+          .map(s -> {
+            modules.rest.model.Measurement measurement = new modules.rest.model.Measurement();
+            measurement.id = s.getId();
+            measurement.measurementName = s.getParam().getParamName();
+            measurement.values = s
+                .getMeasurements()
+                .stream()
+                .map(m -> new Value(m.getTimestamp(), m.getValue()))
+                .toArray(Value[]::new);
+            return measurement;
+          })
+          .collect(Collectors.toList());
+      return stationData;
+    });
     session.close();
-    return ImmutableList.of();
+    return stationDataStream;
   }
 
   @Override

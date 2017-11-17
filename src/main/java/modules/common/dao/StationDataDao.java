@@ -2,10 +2,10 @@ package modules.common.dao;
 
 import modules.rest.model.StationData;
 
-import java.util.List;
+import java.util.stream.Stream;
 
 public interface StationDataDao {
   int save(StationData stationData);
-  List<StationData> getAll();
+  Stream<StationData> getAll();
   StationData getById(int id);
 }
