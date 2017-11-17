@@ -11,7 +11,6 @@ import java.util.Set;
 @Table(name = "parameter")
 public class Parameter {
   @Column(name = "p_id")
-  @GeneratedValue(strategy = GenerationType.AUTO)
   @Id
   private int idParam;
   @Column(name = "p_name")
