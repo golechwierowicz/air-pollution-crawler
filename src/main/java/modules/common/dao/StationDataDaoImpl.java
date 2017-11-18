@@ -15,6 +15,9 @@ import java.util.stream.Stream;
 
 public class StationDataDaoImpl implements StationDataDao {
   private HibernateSessionFactory hibernateSessionFactory;
+  private final String hql = "select lp_id, lp_station_name, lp_latitude, lp_longitude, c_id, c_commune, c_name, s_id, m_id," +
+      " m_timestamp, m_value, s_name from location_point lp left outer join city ci on ci.c_id = lp.city_id " +
+      "inner join sensor s on lp.lp_id = s.locpoint_id join measurement me on s.s_id = me.sensor_id";
 
   public StationDataDaoImpl(HibernateSessionFactory hibernateSessionFactory) { // refactor to use location point dao and write city dao and write measurement dao
     this.hibernateSessionFactory = hibernateSessionFactory;
@@ -58,7 +61,7 @@ public class StationDataDaoImpl implements StationDataDao {
     transaction.commit();
     transaction = session.beginTransaction();
     sensors.forEach(s -> {
-      if(session.get(Sensor.class, s.getId()) == null)
+      if (session.get(Sensor.class, s.getId()) == null)
         session.save(s);
     });
     transaction.commit();
@@ -93,17 +96,15 @@ public class StationDataDaoImpl implements StationDataDao {
   public List<StationData> getAll() {
     Session session = hibernateSessionFactory.getInstance().openSession();
 
-    String hql = "select lp_id, lp_station_name, lp_latitude, lp_longitude, c_id, c_commune, c_name, s_id, m_id," +
-        " m_timestamp, m_value, s_name from location_point lp left outer join city ci on ci.c_id = lp.city_id " +
-        "inner join sensor s on lp.lp_id = s.locpoint_id join measurement me on s.s_id = me.sensor_id";
+
     List list = session.createNativeQuery(hql).list();
     List<StationData> stationDataList = new ArrayList<>();
     for (Object obj : list) {
       Object[] row = (Object[]) obj;
-      LocationPointDTO locationPointDTO = new LocationPointDTO((int)row[0], (String)row[1], (double)row[2], (double)row[3], null, null, null, null);
-      City city = new City((int)row[4], (String)row[6], (Commune)row[5]);
-      Sensor sensor = new Sensor((int)row[7], (int)row[0], (String)row[11], null, new HashSet<>(), new ArrayList<>());
-      Measurement measurement = new Measurement((double)row[10], new DateTime(row[9], DateTimeZone.UTC), null);
+      LocationPointDTO locationPointDTO = new LocationPointDTO((int) row[0], (String) row[1], (double) row[2], (double) row[3], null, null, null, null);
+      City city = new City((int) row[4], (String) row[6], (Commune) row[5]);
+      Sensor sensor = new Sensor((int) row[7], (int) row[0], (String) row[11], null, new HashSet<>(), new ArrayList<>());
+      Measurement measurement = new Measurement((double) row[10], new DateTime(row[9], DateTimeZone.UTC), null);
       addToResult(locationPointDTO, city, sensor, measurement, stationDataList);
     }
     session.close();
@@ -134,17 +135,27 @@ public class StationDataDaoImpl implements StationDataDao {
           new Value[]{new Value(measurement.getTimestamp(), measurement.getValue())}));
       return true;
     });
-    if(!a.isPresent())
+    if (!a.isPresent())
       stationDataList.add(new StationData(locationPointDTO.getId(),
-        locationPointDTO.getStationName(),
-        ImmutableList.of(new modules.rest.model.Measurement(sensor.getId(),
-            sensor.getName(),
-            new Value[]{new Value(measurement.getTimestamp(), measurement.getValue())})),
-        city));
+          locationPointDTO.getStationName(),
+          ImmutableList.of(new modules.rest.model.Measurement(sensor.getId(),
+              sensor.getName(),
+              new Value[]{new Value(measurement.getTimestamp(), measurement.getValue())})),
+          city));
   }
 
   @Override
-  public StationData getById(int id) {
-    return null;
+  public Optional<StationData> getById(int id) {
+    final String query = String.format("%s where lp_id = %d", hql, id);
+    Session session = hibernateSessionFactory.getInstance().openSession();
+    Object[] row = (Object[]) session.createNativeQuery(query).uniqueResult();
+    LocationPointDTO locationPointDTO = new LocationPointDTO((int) row[0], (String) row[1], (double) row[2], (double) row[3], null, null, null, null);
+    City city = new City((int) row[4], (String) row[6], (Commune) row[5]);
+    Sensor sensor = new Sensor((int) row[7], (int) row[0], (String) row[11], null, new HashSet<>(), new ArrayList<>());
+    Measurement measurement = new Measurement((double) row[10], new DateTime(row[9], DateTimeZone.UTC), null);
+    List<StationData> result = new ArrayList<>();
+    addToResult(locationPointDTO, city, sensor, measurement, result);
+    assert result.size() < 2;
+    return Optional.ofNullable(result.size() == 1 ? result.get(0) : null);
   }
 }

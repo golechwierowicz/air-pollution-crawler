@@ -3,6 +3,8 @@ package modules.rest.resources;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import modules.common.dao.*;
+import modules.common.utils.CallServiceImpl;
 import modules.rest.model.IdStationLocator;
 import modules.rest.model.StationData;
 import modules.rest.model.StationLocator;
@@ -10,7 +12,6 @@ import modules.rest.service.CallerService;
 import modules.rest.service.GIOSCallerServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import modules.common.utils.CallServiceImpl;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,15 +29,17 @@ public class LocationPointResource {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/loc_points")
-  public Response getLocationsByCountry() {
+  public Response getLocationsByCountry() throws JsonProcessingException {
     CallerService giosCallerService = new GIOSCallerServiceImpl(new CallServiceImpl());
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.registerModule(new JodaModule());
+
     try {
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.registerModule(new JodaModule());
       return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(giosCallerService.getPointsByCountry(""))).build();
     } catch (IOException e) {
-      log.error("Error io", e);
-      return Response.status(Response.Status.BAD_GATEWAY).entity("Too much load").build();
+      log.error("Error io. Fallbacking to db", e);
+      LocationPointDao locationPointDao = new LocationPointDaoImpl(new HibernateSessionFactoryImpl());
+      return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(locationPointDao.getAll())).build();
     } catch (InterruptedException | ExecutionException e) {
       log.error("e", e);
       return Response.status(Response.Status.BAD_GATEWAY).entity("Too much load").build();
@@ -50,9 +53,15 @@ public class LocationPointResource {
     CallerService callerService = new GIOSCallerServiceImpl(new CallServiceImpl());
     StationLocator stationLocator = new IdStationLocator(id);
     stationLocator.stationName = name;
-    StationData stationData = callerService.getStationData(stationLocator);
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JodaModule());
+    StationData stationData;
+    try {
+      stationData = callerService.getStationData(stationLocator);
+    } catch (Exception e) {
+      StationDataDao stationDataDao = new StationDataDaoImpl(new HibernateSessionFactoryImpl());
+      stationData = stationDataDao.getById(stationLocator.stationId).orElse(null);
+    }
     return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(stationData)).build();
   }
 }
