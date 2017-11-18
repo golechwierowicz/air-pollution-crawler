@@ -67,8 +67,12 @@ public class StationDataDaoImpl implements StationDataDao {
       final List<Measurement> measurements = sensor.getMeasurements();
       measurements.forEach(m -> {
         Transaction txn = session.beginTransaction();
-        session.save(txn);
-        txn.commit();
+        try {
+          session.save(txn);
+          txn.commit();
+        } catch (Exception ex) {
+          txn.rollback();
+        }
       });
     });
     return locationPoint.getId();
