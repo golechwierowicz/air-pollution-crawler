@@ -10,6 +10,7 @@ before_deploy:
   - "ssh golechwi@51.254.121.242 'sudo systemctl stop air-pollution.service'"
 before_script:
   - "npm install -g bower"
+  - "echo -e \"Host heroku.com\n\tStrictHostKeyChecking no\n\" >> ~/.ssh/config"
 deploy:
   provider: script
   script: "ssh golechwi@51.254.121.242 'sudo systemctl start air-pollution.service'"
