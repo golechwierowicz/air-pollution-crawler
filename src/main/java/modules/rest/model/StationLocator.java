@@ -15,5 +15,9 @@ public abstract class StationLocator {
     return Optional.ofNullable(stationCity);
   }
 
+  public void setStationCity(String cityName) {
+    stationCity = cityName;
+  }
+
   protected abstract void setType();
 }

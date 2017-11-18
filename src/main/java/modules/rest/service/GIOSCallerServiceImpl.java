@@ -11,10 +11,7 @@ import modules.rest.model.LocationPoint;
 import modules.rest.model.Measurement;
 import modules.rest.model.StationData;
 import modules.rest.model.StationLocator;
-import modules.rest.model.gios.AirQualityIndex;
-import modules.rest.model.gios.LocationPointDTO;
-import modules.rest.model.gios.MeasurementDTO;
-import modules.rest.model.gios.Sensor;
+import modules.rest.model.gios.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +59,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     StationData stationData = new StationData();
     stationData.measurements = measurements;
     stationData.stationName = stationLocator.stationName;
+    stationData.city = new City(stationLocator.getStationCity().get());
     stationData.setStationId(stationId);
     return stationData;
   }

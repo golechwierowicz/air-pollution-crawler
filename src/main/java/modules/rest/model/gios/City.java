@@ -29,6 +29,10 @@ public class City {
     this.commune = commune;
   }
 
+  public City(String name) {
+    this.name = name;
+  }
+
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)

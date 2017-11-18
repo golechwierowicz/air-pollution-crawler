@@ -10,6 +10,7 @@ import modules.rest.model.StationLocator;
 import modules.rest.service.CallerService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DataCrawler extends AbstractActor {
@@ -29,6 +30,7 @@ public class DataCrawler extends AbstractActor {
           final List<StationLocator> locators = points.stream().map(p -> {
             final StationLocator stationLocator = new IdStationLocator(p.getId());
             stationLocator.stationName = p.getName();
+            stationLocator.setStationCity(stationLocator.stationName);
             return stationLocator;
           }).collect(Collectors.toList());
           final List<StationData> stationDatas = locators.stream().map(id ->
