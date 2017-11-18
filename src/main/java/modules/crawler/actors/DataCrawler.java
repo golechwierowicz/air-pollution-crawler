@@ -10,7 +10,6 @@ import modules.rest.model.StationLocator;
 import modules.rest.service.CallerService;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DataCrawler extends AbstractActor {

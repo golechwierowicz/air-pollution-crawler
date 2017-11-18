@@ -59,7 +59,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     StationData stationData = new StationData();
     stationData.measurements = measurements;
     stationData.stationName = stationLocator.stationName;
-    stationData.city = new City(stationLocator.getStationCity().get());
+    stationData.city = new City(stationLocator.getStationCity().orElse(""));
     stationData.setStationId(stationId);
     return stationData;
   }
