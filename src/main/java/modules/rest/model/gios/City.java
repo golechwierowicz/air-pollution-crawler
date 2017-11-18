@@ -12,6 +12,7 @@ import java.util.Set;
 public class City {
   @Id
   @Column(name = "c_id")
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private int id;
   @Column(name = "c_name")
   private String name;
