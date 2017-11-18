@@ -22,6 +22,12 @@ public class City {
   public City() {
   }
 
+  public City(int id, String name, Commune commune) {
+    this.id = id;
+    this.name = name;
+    this.commune = commune;
+  }
+
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)

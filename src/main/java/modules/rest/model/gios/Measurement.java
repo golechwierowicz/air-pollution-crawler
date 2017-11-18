@@ -20,7 +20,7 @@ public class Measurement {
   @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
   private DateTime timestamp;
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "s_id", nullable = false)
+  @JoinColumn(name = "sensor_id", nullable = false)
   private Sensor sensor;
 
   public Measurement() {

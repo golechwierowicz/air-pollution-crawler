@@ -21,7 +21,7 @@ public class LocationPointDTO {
   @Column(name = "lp_longitude")
   private double gegrLon;
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "c_id", nullable = false)
+  @JoinColumn(name = "city_id", nullable = false)
   private City city;
   @Column(name = "lp_street_address")
   private String addressStreet;
@@ -34,6 +34,17 @@ public class LocationPointDTO {
   @JsonIgnore
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "locationPointDTO")
   private Set<Sensor> sensors;
+
+  public LocationPointDTO(int id, String stationName, double gegrLat, double gegrLon, City city, String addressStreet, DateTime dateStart, DateTime dateEnd) {
+    this.id = id;
+    this.stationName = stationName;
+    this.gegrLat = gegrLat;
+    this.gegrLon = gegrLon;
+    this.city = city;
+    this.addressStreet = addressStreet;
+    this.dateStart = dateStart;
+    this.dateEnd = dateEnd;
+  }
 
   public LocationPointDTO() {
   }

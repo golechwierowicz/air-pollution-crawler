@@ -6,11 +6,11 @@ import modules.rest.model.StationData;
 import modules.rest.model.gios.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.joda.time.DateTime;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StationDataDaoImpl implements StationDataDao {
   private HibernateSessionFactory hibernateSessionFactory;
@@ -76,18 +76,54 @@ public class StationDataDaoImpl implements StationDataDao {
   public List<StationData> getAll() {
     Session session = hibernateSessionFactory.getInstance().openSession();
 
-    String hql = "from location_point lp left outer join city ci on ci.c_id = lp.c_id " +
-        "inner join sensor s on lp.lp_id = s.lp_id join measurement me on s.s_id = me.s_id";
-    List list = session.createQuery(hql).list();
-    for(Object obj : list) {
+    String hql = "select lp_id, lp_station_name, lp_latitude, lp_longitude, c_id, c_commune, c_name, s_id, m_id," +
+        " m_timestamp, m_value from location_point lp left outer join city ci on ci.c_id = lp.city_id " +
+        "inner join sensor s on lp.lp_id = s.locpoint_id join measurement me on s.s_id = me.sensor_id";
+    List list = session.createNativeQuery(hql).list();
+    List<StationData> stationDataList = new ArrayList<>();
+    for (Object obj : list) {
       Object[] row = (Object[]) obj;
-      LocationPointDTO locationPointDTO = (LocationPointDTO) row[0];
-      City city = (City) row[1];
-      Sensor sensor = (Sensor) row[2];
-      Measurement measurement = (Measurement) row[3];
+      LocationPointDTO locationPointDTO = new LocationPointDTO((int)row[0], (String)row[1], (double)row[2], (double)row[3], null, null, null, null);
+      City city = new City((int)row[4], (String)row[6], (Commune)row[5]);
+      Sensor sensor = new Sensor((int)row[7], (int)row[0], null /* FixMe */, null, new HashSet<>(), new ArrayList<>());
+      Measurement measurement = new Measurement((double)row[10], new DateTime(row[9]), null);
+      addToResult(locationPointDTO, city, sensor, measurement, stationDataList);
     }
     session.close();
-    return ImmutableList.of();
+    return stationDataList;
+  }
+
+  private void addToResult(LocationPointDTO locationPointDTO,
+                           City city,
+                           Sensor sensor,
+                           Measurement measurement,
+                           List<StationData> stationDataList) {
+    Stream<StationData> stationDataStream = stationDataList
+        .stream()
+        .filter(s -> s.getStationId() == locationPointDTO.getId());
+    Optional<Boolean> a = stationDataStream.findFirst().map(s -> {
+      Optional<modules.rest.model.Measurement> first = s
+          .measurements
+          .stream()
+          .filter(m -> m.id == sensor.getId())
+          .findFirst();
+      if (first.isPresent()) {
+        List<Value> valuesList = new ArrayList<>();
+        valuesList.addAll(Arrays.asList(first.get().values));
+        valuesList.add(new Value(measurement.getTimestamp(), measurement.getValue()));
+        first.get().values = valuesList.toArray(new Value[valuesList.size()]);
+      } else s.measurements.add(new modules.rest.model.Measurement(sensor.getId(),
+          "a", // FixMe: change to get params
+          new Value[]{new Value(measurement.getTimestamp(), measurement.getValue())}));
+      return true;
+    });
+    if(!a.isPresent())
+      stationDataList.add(new StationData(locationPointDTO.getId(),
+        locationPointDTO.getStationName(),
+        ImmutableList.of(new modules.rest.model.Measurement(sensor.getId(),
+            "a",
+            new Value[]{new Value(measurement.getTimestamp(), measurement.getValue())})),
+        city));
   }
 
   @Override

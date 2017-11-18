@@ -26,7 +26,7 @@ public class StationDataDaoImplTest {
     ImmutableSet<String> tables = ImmutableSet.of("sensor", "location_point", "parameter", "measurement", "city");
     tables.forEach(t -> {
       session
-          .createNativeQuery("TRUNCATE TABLE " + t + " CASCADE")
+          .createNativeQuery("DROP TABLE " + t + " CASCADE")
           .executeUpdate();
     });
     transaction.commit();
@@ -46,6 +46,7 @@ public class StationDataDaoImplTest {
     stationData.stationName = "save";
     stationDataDao.save(stationData);
     List<StationData> result = stationDataDao.getAll();
+    result.forEach(System.out::println);
     assertNotNull(result);
     assertEquals(1, result.size());
   }

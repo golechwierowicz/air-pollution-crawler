@@ -26,7 +26,7 @@ public class Sensor {
   @JsonIgnore
   private DateTime sensorDateEnd;
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "lp_id", nullable = false)
+  @JoinColumn(name = "locpoint_id", nullable = false)
   @JsonIgnore
   private LocationPointDTO locationPointDTO;
   @ManyToMany()
