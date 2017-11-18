@@ -45,7 +45,7 @@ public class StationDataDaoImpl implements StationDataDao {
     City existingCity;
     try {
       existingCity = (City) session
-          .createQuery(String.format(" from city where c_name = %s", city.getName()))
+          .createQuery(String.format(" from city where c_name = \"%s\"", city.getName()))
           .uniqueResult();
       if (existingCity == null)
         session.save(city);
@@ -74,6 +74,7 @@ public class StationDataDaoImpl implements StationDataDao {
         }
       });
     });
+    session.close();
     return locationPoint.getId();
   }
 
