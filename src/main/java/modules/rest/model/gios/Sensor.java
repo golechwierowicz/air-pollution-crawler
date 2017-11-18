@@ -40,6 +40,9 @@ public class Sensor {
   @OneToMany(mappedBy = "sensor")
   @JsonIgnore
   private List<Measurement> measurements;
+  @Column(name="s_name")
+  private String name;
+
 
   public Sensor() {
   }
@@ -48,6 +51,15 @@ public class Sensor {
     this.id = id;
     this.stationId = stationId;
     this.param = param;
+    this.locationPointDTO = locationPointDTO;
+    this.params = params;
+    this.measurements = measurements;
+  }
+
+  public Sensor(int id, int stationId, String name, LocationPointDTO locationPointDTO, Set<Parameter> params, List<Measurement> measurements) {
+    this.id = id;
+    this.stationId = stationId;
+    this.name = name;
     this.locationPointDTO = locationPointDTO;
     this.params = params;
     this.measurements = measurements;
@@ -146,4 +158,13 @@ public class Sensor {
   public void setMeasurements(List<Measurement> measurements) {
     this.measurements = measurements;
   }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
 }

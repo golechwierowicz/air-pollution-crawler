@@ -7,6 +7,7 @@ import modules.rest.model.gios.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -32,7 +33,8 @@ public class StationDataDaoImpl implements StationDataDao {
         .measurements
         .stream()
         .map(m -> {
-          Sensor sensor = new Sensor(m.id, stationData.getStationId(), null, locationPoint, ImmutableSet.of(), null);
+          Sensor sensor = new Sensor(m.id, stationData.getStationId(), m.measurementName, locationPoint, ImmutableSet.of(), null);
+          sensor.setName(m.measurementName);
           List<Measurement> measurements = valuesToMeasurements(sensor, Arrays.asList(m.values));
           sensor.setMeasurements(measurements);
           assert sensor.getMeasurements() != null;
@@ -77,7 +79,7 @@ public class StationDataDaoImpl implements StationDataDao {
     Session session = hibernateSessionFactory.getInstance().openSession();
 
     String hql = "select lp_id, lp_station_name, lp_latitude, lp_longitude, c_id, c_commune, c_name, s_id, m_id," +
-        " m_timestamp, m_value from location_point lp left outer join city ci on ci.c_id = lp.city_id " +
+        " m_timestamp, m_value, s_name from location_point lp left outer join city ci on ci.c_id = lp.city_id " +
         "inner join sensor s on lp.lp_id = s.locpoint_id join measurement me on s.s_id = me.sensor_id";
     List list = session.createNativeQuery(hql).list();
     List<StationData> stationDataList = new ArrayList<>();
@@ -85,8 +87,8 @@ public class StationDataDaoImpl implements StationDataDao {
       Object[] row = (Object[]) obj;
       LocationPointDTO locationPointDTO = new LocationPointDTO((int)row[0], (String)row[1], (double)row[2], (double)row[3], null, null, null, null);
       City city = new City((int)row[4], (String)row[6], (Commune)row[5]);
-      Sensor sensor = new Sensor((int)row[7], (int)row[0], null /* FixMe */, null, new HashSet<>(), new ArrayList<>());
-      Measurement measurement = new Measurement((double)row[10], new DateTime(row[9]), null);
+      Sensor sensor = new Sensor((int)row[7], (int)row[0], (String)row[11], null, new HashSet<>(), new ArrayList<>());
+      Measurement measurement = new Measurement((double)row[10], new DateTime(row[9], DateTimeZone.UTC), null);
       addToResult(locationPointDTO, city, sensor, measurement, stationDataList);
     }
     session.close();
@@ -113,7 +115,7 @@ public class StationDataDaoImpl implements StationDataDao {
         valuesList.add(new Value(measurement.getTimestamp(), measurement.getValue()));
         first.get().values = valuesList.toArray(new Value[valuesList.size()]);
       } else s.measurements.add(new modules.rest.model.Measurement(sensor.getId(),
-          "a", // FixMe: change to get params
+          "", // FixMe: change to get params
           new Value[]{new Value(measurement.getTimestamp(), measurement.getValue())}));
       return true;
     });
@@ -121,7 +123,7 @@ public class StationDataDaoImpl implements StationDataDao {
       stationDataList.add(new StationData(locationPointDTO.getId(),
         locationPointDTO.getStationName(),
         ImmutableList.of(new modules.rest.model.Measurement(sensor.getId(),
-            "a",
+            sensor.getName(),
             new Value[]{new Value(measurement.getTimestamp(), measurement.getValue())})),
         city));
   }

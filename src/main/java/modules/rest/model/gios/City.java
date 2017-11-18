@@ -2,6 +2,7 @@ package modules.rest.model.gios;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -59,5 +60,20 @@ public class City {
 
   public void setCommune(Commune commune) {
     this.commune = commune;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    City city = (City) o;
+    return id == city.id &&
+        Objects.equal(name, city.name) &&
+        Objects.equal(commune, city.commune);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id, name, commune, locationPointDTOSet);
   }
 }

@@ -18,6 +18,7 @@ public class HibernateSessionFactoryImpl implements HibernateSessionFactory {
         .setProperty("hibernate.connection.url", config.getString("url"))
         .setProperty("hibernate.dialect", config.getString("dialect"))
         .setProperty("hibernate.hbm2ddl.auto", "update")
+        .setProperty("hibernate.jdbc.time_zone", "UTC")
         .addAnnotatedClass(LocationPointDTO.class)
         .addAnnotatedClass(City.class)
         .addAnnotatedClass(Sensor.class)

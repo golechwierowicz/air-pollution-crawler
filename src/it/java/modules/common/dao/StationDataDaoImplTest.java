@@ -4,10 +4,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import modules.rest.model.Measurement;
 import modules.rest.model.StationData;
+import modules.rest.model.gios.City;
 import modules.rest.model.gios.Value;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +37,7 @@ public class StationDataDaoImplTest {
   @Test
   public void save() throws Exception {
     StationDataDao stationDataDao = new StationDataDaoImpl(new HibernateSessionFactoryImpl());
-    DateTime now = new DateTime();
+    DateTime now = new DateTime(DateTimeZone.UTC);
     StationData stationData = new StationData();
     stationData.setStationId(1);
     Measurement measurement = new Measurement();
@@ -44,11 +46,15 @@ public class StationDataDaoImplTest {
     measurement.values = new Value[]{new Value(now, 1.0), new Value(now.minusDays(1), 2.0)};
     stationData.measurements = ImmutableList.of(measurement);
     stationData.stationName = "save";
+    City city = new City();
+    city.setName(stationData.stationName);
+    stationData.city = city;
     stationDataDao.save(stationData);
     List<StationData> result = stationDataDao.getAll();
-    result.forEach(System.out::println);
     assertNotNull(result);
     assertEquals(1, result.size());
+    StationData stationDataResult = result.get(0);
+    assertEquals(stationData, stationDataResult);
   }
 
   @Test

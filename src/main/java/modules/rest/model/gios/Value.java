@@ -2,6 +2,7 @@ package modules.rest.model.gios;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -42,5 +43,19 @@ public class Value {
         .add("date", date)
         .add("value", value)
         .toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Value value1 = (Value) o;
+    return Double.compare(value1.value, value) == 0 &&
+        date.equals(value1.date);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(date, value);
   }
 }

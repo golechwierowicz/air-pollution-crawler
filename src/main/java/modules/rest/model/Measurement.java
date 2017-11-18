@@ -1,6 +1,7 @@
 package modules.rest.model;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import modules.rest.model.gios.Value;
 
 public class Measurement {
@@ -26,5 +27,31 @@ public class Measurement {
         .add("values", values)
         .add("attributes", attributes)
         .toString();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Measurement that = (Measurement) o;
+    return id == that.id &&
+        Objects.equal(measurementName, that.measurementName) &&
+        compareArrays(values, that.values);
+  }
+
+  private boolean compareArrays(Value[] values, Value[] values1) {
+    if(values.length != values1.length)
+      return false;
+
+    for(int i = 0; i < values.length; i++) {
+      if(!values[i].equals(values1[i]))
+        return false;
+    }
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id, measurementName, values, attributes);
   }
 }
