@@ -57,7 +57,10 @@ public class StationDataDaoImpl implements StationDataDao {
     if (locationPointDTO == null)
       session.save(locationPoint);
 
-    sensors.forEach(session::save);
+    sensors.forEach(s -> {
+      if(session.get(Sensor.class, s.getId()) == null)
+        session.save(s);
+    });
     sensors.forEach(sensor -> sensor.getMeasurements().forEach(session::save));
     transaction.commit();
     return locationPoint.getId();
