@@ -6,6 +6,7 @@ import modules.crawler.model.DataCrawl;
 import modules.rest.model.IdStationLocator;
 import modules.rest.model.LocationPoint;
 import modules.rest.model.StationData;
+import modules.rest.model.StationLocator;
 import modules.rest.service.CallerService;
 
 import java.util.List;
@@ -25,9 +26,13 @@ public class DataCrawler extends AbstractActor {
     return receiveBuilder()
         .match(DataCrawl.class, d -> {
           final List<LocationPoint> points = callerService.getPointsByCountry(null);
-          final List<Integer> pointsIds = points.stream().map(LocationPoint::getId).collect(Collectors.toList());
-          final List<StationData> stationDatas = pointsIds.stream().map(id ->
-              callerService.getStationData(new IdStationLocator(id))
+          final List<StationLocator> locators = points.stream().map(p -> {
+            final StationLocator stationLocator = new IdStationLocator(p.getId());
+            stationLocator.stationName = p.getName();
+            return stationLocator;
+          }).collect(Collectors.toList());
+          final List<StationData> stationDatas = locators.stream().map(id ->
+              callerService.getStationData(id)
           ).collect(Collectors.toList());
           stationDatas.forEach(sd -> stationDataDao.save(sd));
         }).build();
