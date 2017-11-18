@@ -67,7 +67,7 @@ public class StationDataDaoImpl implements StationDataDao {
       measurements.forEach(m -> {
         Transaction txn = session.beginTransaction();
         try {
-          session.save(txn);
+          session.save(m);
           txn.commit();
         } catch (Exception ex) {
           txn.rollback();
