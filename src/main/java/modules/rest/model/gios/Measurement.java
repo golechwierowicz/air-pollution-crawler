@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "measurement")
+@Table(name = "measurement", uniqueConstraints = @UniqueConstraint(columnNames = {"m_timestamp", "sensor_id"}))
 public class Measurement {
   @Id
   @Column(name = "m_id")
