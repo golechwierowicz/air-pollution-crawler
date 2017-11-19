@@ -24,7 +24,8 @@ angular.module('newsList').component('newsList', {
             this.currentPage = 1;
             this.pageSize = 10;
             this.alerts = [];
-
+            this.dateKey = 'dateFetched';
+            this.dateFetched = $cookies.getObject(dateKey) === undefined ? '' : $cookies.getObject(dateKey);
             this.id = this.cache.get('id') === undefined ? '' : this.cache.get('id');
             this.result = Crawler.crawlingResult === undefined ? [] : Crawler.crawlingResult;
             this.timerCalled = 0;
@@ -36,6 +37,8 @@ angular.module('newsList').component('newsList', {
                         Crawler.result.query({id: this.id}).$promise.then((data) => {
                             this.result = data;
                             $cookies.putObject(Crawler.cookieCrawlerResultKey, this.result.slice(0, 5)); // save 5 results to cookie
+                            this.dateFetched = new Date();
+                            $cookies.putObject(dateKey, this.dateFetched);
                             this.cache.put('id', this.id);
                         });
                         if (++this.timerCalled > 10) {
