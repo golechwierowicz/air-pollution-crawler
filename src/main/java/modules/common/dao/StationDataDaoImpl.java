@@ -156,6 +156,7 @@ public class StationDataDaoImpl implements StationDataDao {
     List<StationData> result = new ArrayList<>();
     addToResult(locationPointDTO, city, sensor, measurement, result);
     assert result.size() < 2;
+    session.close();
     return Optional.ofNullable(result.size() == 1 ? result.get(0) : null);
   }
 }

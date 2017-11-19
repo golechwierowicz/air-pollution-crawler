@@ -36,7 +36,10 @@ public class LocationPointDaoImpl implements LocationPointDao {
 
   @Override
   public List<LocationPointDTO> getAll() {
+    assert hibernateSessionFactory != null;
     Session session = hibernateSessionFactory.getInstance().openSession();
-    return session.createQuery("from LocationPointDTO").list();
+    final List result = session.createQuery("from LocationPointDTO").list();
+    session.close();
+    return (List<LocationPointDTO>)result;
   }
 }
