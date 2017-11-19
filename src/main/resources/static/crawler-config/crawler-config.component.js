@@ -22,7 +22,7 @@ angular.module('crawlerConfig').component('crawlerConfig', {
                 console.info('setting new crawling req', this.newCrawlingRequest);
                 console.info('old', Crawler.crawlingRequest);
                 Crawler.crawlingRequest = this.newCrawlingRequest;
-                $cookies.putObject(Crawler.cookieKey, Crawler.crawlingRequest);
+                $cookies.putObject(Crawler.cookieCrawlerConfigKey, Crawler.crawlingRequest);
                 this.addAlert('Successfully saved crawling config');
             };
 

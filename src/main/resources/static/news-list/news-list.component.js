@@ -2,8 +2,8 @@
 
 angular.module('newsList').component('newsList', {
     templateUrl: 'news-list/news-list.template.html',
-    controller: ['$scope', '$cacheFactory', '$window' ,'Crawler', 'ModalService', 'ngClipboard',
-        function ($scope, $cacheFactory, $window, Crawler, ModalService, ngClipboard) {
+    controller: ['$scope', '$cacheFactory', '$window', '$cookies', 'Crawler', 'ModalService', 'ngClipboard',
+        function ($scope, $cacheFactory, $window, $cookies, Crawler, ModalService, ngClipboard) {
             this.showModal = function () {
                 ModalService.showModal({
                     templateUrl: "news-list/crawling-modal.template.html",
@@ -14,7 +14,7 @@ angular.module('newsList').component('newsList', {
                 }).then(modal => {
                     modal.element.modal();
                     modal.close.then(function (result) {
-                        $scope.yesNoResult = result ? "You said Yes" : "You didn't say Yes";
+                        console.log(result)
                     });
                 });
             };
@@ -26,7 +26,7 @@ angular.module('newsList').component('newsList', {
             this.alerts = [];
 
             this.id = this.cache.get('id') === undefined ? '' : this.cache.get('id');
-            this.result = this.cache.get('result') === undefined ? [] : this.cache.get('result');
+            this.result = Crawler.crawlingResult === undefined ? [] : Crawler.crawlingResult;
             this.timerCalled = 0;
 
             this.crawl = function () {
@@ -35,7 +35,7 @@ angular.module('newsList').component('newsList', {
                     this.timer = $window.setInterval(() => {
                         Crawler.result.query({id: this.id}).$promise.then((data) => {
                             this.result = data;
-                            this.cache.put('result', data);
+                            $cookies.putObject(Crawler.cookieCrawlerResultKey, this.result.slice(0, 5)); // save 5 results to cookie
                             this.cache.put('id', this.id);
                         });
                         if (++this.timerCalled > 10) {
@@ -46,15 +46,6 @@ angular.module('newsList').component('newsList', {
                 this.showModal();
             };
 
-            this.getResult = function () {
-                Crawler.result.query({id: this.id}).$promise.then((data) => {
-                    this.result = data;
-                    this.totalItems = data.length;
-                    this.cache.put('result', data);
-                    this.cache.put('id', this.id);
-                });
-            };
-
             this.fetchAdditional = function() {
                 let currentLength = this.result.length;
                 Crawler.result.query({id: this.id}).$promise.then((data) => {
@@ -62,6 +53,7 @@ angular.module('newsList').component('newsList', {
                     this.totalItems = data.length;
                     this.cache.put('result', data);
                     this.cache.put('id', this.id);
+                    $cookies.putObject(Crawler.cookieCrawlerResultKey, data);
                     if(data.length === currentLength) {
                         this.addAlert('Nothing to fetch');
                     }

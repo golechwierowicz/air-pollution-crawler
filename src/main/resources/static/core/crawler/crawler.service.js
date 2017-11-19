@@ -3,7 +3,8 @@
 angular.module('core.crawler').factory('Crawler', ['$resource', '$cookies',
     function ($resource, $cookies) {
         return {
-            cookieKey: 'crawlingRequest',
+            cookieCrawlerConfigKey: 'crawlingRequest',
+            cookieCrawlerResultKey: 'crawlingResult',
             crawl: $resource(
                 'api/crawl', {}, {
                     query: {
@@ -18,7 +19,8 @@ angular.module('core.crawler').factory('Crawler', ['$resource', '$cookies',
                         isArray: true
                     }
                 }),
-            crawlingRequest: $cookies.getObject('crawlingRequest')
+            crawlingRequest: $cookies.getObject('crawlingRequest'),
+            crawlingResult: $cookies.getObject('crawlingResult')
         }
     }
 ]);
