@@ -40,7 +40,7 @@ public class DataCrawler extends AbstractActor {
 
           }).collect(Collectors.toList());
           log.info("Locators size: " + locators.size());
-          final List<ImmutablePair> stationDatas = locators.stream().map(p ->
+          final List<ImmutablePair<StationData, LocationPoint>> stationDatas = locators.stream().map(p ->
               new ImmutablePair<StationData, LocationPoint>(callerService.getStationData(p.left), p.right)
           ).collect(Collectors.toList());
           log.info("Got station datas: " + stationDatas.size());
