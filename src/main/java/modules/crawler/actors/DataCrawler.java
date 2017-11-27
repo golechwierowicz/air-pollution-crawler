@@ -10,6 +10,7 @@ import modules.rest.model.LocationPoint;
 import modules.rest.model.StationData;
 import modules.rest.model.StationLocator;
 import modules.rest.service.CallerService;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,18 +32,19 @@ public class DataCrawler extends AbstractActor {
           log.info("Crawling for values...");
           final List<LocationPoint> points = callerService.getPointsByCountry(null);
           log.info("Got " + points.size() + " points.");
-          final List<StationLocator> locators = points.stream().map(p -> {
+          final List<ImmutablePair<StationLocator, LocationPoint>> locators = points.stream().map(p -> {
             final StationLocator stationLocator = new IdStationLocator(p.getId());
             stationLocator.stationName = p.getName();
             stationLocator.setStationCity(p.getCityName());
-            return stationLocator;
+            return new ImmutablePair<StationLocator, LocationPoint>(stationLocator, p);
+
           }).collect(Collectors.toList());
           log.info("Locators size: " + locators.size());
-          final List<StationData> stationDatas = locators.stream().map(id ->
-              callerService.getStationData(id)
+          final List<ImmutablePair> stationDatas = locators.stream().map(p ->
+              new ImmutablePair<StationData, LocationPoint>(callerService.getStationData(p.left), p.right)
           ).collect(Collectors.toList());
           log.info("Got station datas: " + stationDatas.size());
-          stationDatas.forEach(sd -> stationDataDao.save(sd));
+          stationDatas.forEach(sd -> stationDataDao.save(sd.left, sd.right));
         }).build();
   }
 }

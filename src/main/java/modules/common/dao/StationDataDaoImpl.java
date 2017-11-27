@@ -2,6 +2,7 @@ package modules.common.dao;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import modules.rest.model.LocationPoint;
 import modules.rest.model.StationData;
 import modules.rest.model.gios.*;
 import org.hibernate.Session;
@@ -27,26 +28,28 @@ public class StationDataDaoImpl implements StationDataDao {
   }
 
   @Override
-  public int save(StationData stationData) {
+  public int save(StationData stationData, LocationPoint locationPoint) {
     try(Session session = hibernateSessionFactory.getInstance().openSession()) {
-      LocationPointDTO locationPoint = new LocationPointDTO();
-      locationPoint.setId(stationData.getStationId());
-      locationPoint.setStationName(stationData.stationName);
+      LocationPointDTO locationPointDTO = new LocationPointDTO();
+      locationPointDTO.setId(stationData.getStationId());
+      locationPointDTO.setStationName(stationData.stationName);
+      locationPointDTO.setCity(new City(locationPoint.getCityName()));
+      locationPointDTO.setGegrLon(locationPoint.getLongtitude());
+      locationPointDTO.setGegrLat(locationPoint.getLatitude());
       City city = new City();
       city.setName(stationData.city.getName());
-      locationPoint.setCity(city);
       List<Sensor> sensors = stationData
           .measurements
           .stream()
           .map(m -> {
-            Sensor sensor = new Sensor(m.id, stationData.getStationId(), m.measurementName, locationPoint, ImmutableSet.of(), null);
+            Sensor sensor = new Sensor(m.id, stationData.getStationId(), m.measurementName, locationPointDTO, ImmutableSet.of(), null);
             sensor.setName(m.measurementName);
             List<Measurement> measurements = valuesToMeasurements(sensor, Arrays.asList(m.values));
             sensor.setMeasurements(measurements);
             assert sensor.getMeasurements() != null;
             return sensor;
           }).collect(Collectors.toList());
-      locationPoint.setSensors(new HashSet<>(sensors));
+      locationPointDTO.setSensors(new HashSet<>(sensors));
       Transaction transaction = session.beginTransaction();
       City existingCity;
       try {
@@ -59,8 +62,8 @@ public class StationDataDaoImpl implements StationDataDao {
         log.error("Error fetching city...", e);
         session.save(city);
       }
-      LocationPointDTO locationPointDTO = session.get(LocationPointDTO.class, locationPoint.getId());
-      if (locationPointDTO == null)
+      LocationPointDTO locationPointDTOMaybe = session.get(LocationPointDTO.class, locationPoint.getId());
+      if (locationPointDTOMaybe == null)
         session.save(locationPoint);
       transaction.commit();
       transaction = session.beginTransaction();
