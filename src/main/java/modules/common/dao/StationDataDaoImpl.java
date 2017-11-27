@@ -62,9 +62,9 @@ public class StationDataDaoImpl implements StationDataDao {
         log.error("Error fetching city...", e);
         session.save(city);
       }
-      LocationPointDTO locationPointDTOMaybe = session.get(LocationPointDTO.class, locationPoint.getId());
+      LocationPointDTO locationPointDTOMaybe = session.get(LocationPointDTO.class, locationPointDTO.getId());
       if (locationPointDTOMaybe == null)
-        session.save(locationPoint);
+        session.save(locationPointDTO);
       transaction.commit();
       transaction = session.beginTransaction();
       sensors.forEach(s -> {
