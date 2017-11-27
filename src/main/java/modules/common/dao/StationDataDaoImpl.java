@@ -33,11 +33,10 @@ public class StationDataDaoImpl implements StationDataDao {
       LocationPointDTO locationPointDTO = new LocationPointDTO();
       locationPointDTO.setId(stationData.getStationId());
       locationPointDTO.setStationName(stationData.stationName);
-      locationPointDTO.setCity(new City(locationPoint.getCityName()));
+      City city = new City(locationPoint.getCityName());
+      locationPointDTO.setCity(city);
       locationPointDTO.setGegrLon(locationPoint.getLongtitude());
       locationPointDTO.setGegrLat(locationPoint.getLatitude());
-      City city = new City();
-      city.setName(stationData.city.getName());
       List<Sensor> sensors = stationData
           .measurements
           .stream()
