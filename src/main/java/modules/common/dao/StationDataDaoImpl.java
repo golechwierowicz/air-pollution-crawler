@@ -51,11 +51,12 @@ public class StationDataDaoImpl implements StationDataDao {
       City existingCity;
       try {
         existingCity = (City) session
-            .createQuery(String.format(" from city where c_name = \"%s\"", city.getName()))
+            .createQuery(String.format(" from city where c_name = '%s'", city.getName()))
             .uniqueResult();
         if (existingCity == null)
           session.save(city);
       } catch (IllegalArgumentException e) {
+        log.error("Error fetching city...", e);
         session.save(city);
       }
       LocationPointDTO locationPointDTO = session.get(LocationPointDTO.class, locationPoint.getId());
@@ -71,12 +72,14 @@ public class StationDataDaoImpl implements StationDataDao {
       sensors.forEach(sensor -> {
         final List<Measurement> measurements = sensor.getMeasurements();
         measurements.forEach(m -> {
-          Transaction txn = session.beginTransaction();
-          try {
-            session.save(m);
-            txn.commit();
-          } catch (Exception ex) {
-            txn.rollback();
+          if(m.getValue() > 0.0) {
+            Transaction txn = session.beginTransaction();
+            try {
+              session.save(m);
+              txn.commit();
+            } catch (Exception ex) {
+              txn.rollback();
+            }
           }
         });
       });

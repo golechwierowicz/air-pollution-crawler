@@ -117,6 +117,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     LocationPointDTO[] points = mapper.readValue(content, LocationPointDTO[].class);
     return Arrays.stream(points).map(p -> {
       LocationPoint locationPoint = new LocationPoint();
+      locationPoint.setCityName(p.getCity() != null ? p.getCity().getName() : null);
       locationPoint.setName(p.getStationName());
       locationPoint.setValue(null);
       locationPoint.setLatitude(p.getGegrLat());

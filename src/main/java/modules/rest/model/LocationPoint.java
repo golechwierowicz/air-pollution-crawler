@@ -7,6 +7,7 @@ public class LocationPoint {
   private double latitude;
   private double longtitude;
   private String name;
+  private String cityName;
   private Long value;
   private AirQualityIndex airQualityIndex;
 
@@ -56,5 +57,13 @@ public class LocationPoint {
 
   public void setId(int id) {
     this.id = id;
+  }
+
+  public String getCityName() {
+    return cityName;
+  }
+
+  public void setCityName(String cityName) {
+    this.cityName = cityName;
   }
 }

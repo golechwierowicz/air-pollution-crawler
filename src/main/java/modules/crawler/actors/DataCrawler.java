@@ -34,7 +34,7 @@ public class DataCrawler extends AbstractActor {
           final List<StationLocator> locators = points.stream().map(p -> {
             final StationLocator stationLocator = new IdStationLocator(p.getId());
             stationLocator.stationName = p.getName();
-            stationLocator.setStationCity(stationLocator.stationName);
+            stationLocator.setStationCity(p.getCityName());
             return stationLocator;
           }).collect(Collectors.toList());
           log.info("Locators size: " + locators.size());
