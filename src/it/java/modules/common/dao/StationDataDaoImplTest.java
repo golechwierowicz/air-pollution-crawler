@@ -2,6 +2,7 @@ package modules.common.dao;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import modules.rest.model.LocationPoint;
 import modules.rest.model.Measurement;
 import modules.rest.model.StationData;
 import modules.rest.model.gios.City;
@@ -49,7 +50,7 @@ public class StationDataDaoImplTest {
     City city = new City();
     city.setName(stationData.stationName);
     stationData.city = city;
-    stationDataDao.save(stationData);
+    stationDataDao.save(stationData, new LocationPoint());
     List<StationData> result = stationDataDao.getAll();
     assertNotNull(result);
     assertEquals(1, result.size());
