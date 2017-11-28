@@ -1,0 +1,16 @@
+<div class="row top-buffer">
+    <div class="col-md-2 col-md-offset-4">
+        <h2>Export</h2>
+    </div>
+</div>
+<div class="row top-buffer">
+    <div uib-alert ng-repeat="alert in $ctrl.alerts" ng-class="'alert-' + (alert.type)"
+         close="$ctrl.closeAlert($index)">
+        {{alert.msg}}
+    </div>
+</div>
+<div class="row top-buffer bottom-buffer">
+    <div class="col-md-10">
+        <button class="btn btn-primary" ng-click="$ctrl.download()">Export</button>
+    </div>
+</div>

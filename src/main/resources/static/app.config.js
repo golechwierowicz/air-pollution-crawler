@@ -20,6 +20,9 @@ angular.module('airPollutionApp').config(['$locationProvider', '$routeProvider',
             .when('/config', {
                 template: '<crawler-config></crawler-config>'
             })
-            .otherwise('/location_points');
+            .when('/export', {
+                template: '<export></export>'
+            })
+            .otherwise('/map');
     }
 ]);

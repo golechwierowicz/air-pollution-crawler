@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import modules.common.dao.*;
+import modules.common.streams.ExportMeasurementsStreamWriter;
 import modules.common.utils.CallServiceImpl;
 import modules.rest.model.IdStationLocator;
 import modules.rest.model.StationData;
@@ -63,5 +64,15 @@ public class LocationPointResource {
       stationData = stationDataDao.getById(stationLocator.stationId).orElse(null);
     }
     return Response.status(Response.Status.OK).entity(mapper.writeValueAsString(stationData)).build();
+  }
+
+  @GET
+  @Produces("text/comma-separated-values")
+  @Path("/measurements.csv")
+  public Response getData() {
+    return Response
+        .status(Response.Status.OK)
+        .entity(new ExportMeasurementsStreamWriter(new HibernateSessionFactoryImpl()))
+        .build();
   }
 }
