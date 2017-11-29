@@ -19,6 +19,10 @@ angular.module('export').component('export', {
                 this.alerts.push({type: 'info', msg: msg});
             };
 
+            this.closeAlert = function(idx) {
+                this.alerts.splice(idx, 1);
+            }
+
         }
     ]
 });
