@@ -55,6 +55,8 @@ public class StationDataDaoImplTest {
     assertNotNull(result);
     assertEquals(1, result.size());
     StationData stationDataResult = result.get(0);
+    stationDataResult.city.setId(0);
+    stationData.city.setName(null);
     assertEquals(stationData, stationDataResult);
   }
 

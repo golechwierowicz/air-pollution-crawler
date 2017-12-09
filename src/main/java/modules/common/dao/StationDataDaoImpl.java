@@ -109,7 +109,14 @@ public class StationDataDaoImpl implements StationDataDao {
       List<StationData> stationDataList = new ArrayList<>();
       for (Object obj : list) {
         Object[] row = (Object[]) obj;
-        LocationPointDTO locationPointDTO = new LocationPointDTO((int) row[0], (String) row[1], (double) row[2], (double) row[3], null, null, null, null);
+        LocationPointDTO locationPointDTO = new LocationPointDTO((int) row[0],
+            (String) row[1],
+            (double) row[2],
+            (double) row[3],
+            null,
+            null,
+            null,
+            null);
         City city = new City((int) row[4], (String) row[6], (Commune) row[5]);
         Sensor sensor = new Sensor((int) row[7], (int) row[0], (String) row[11], null, new HashSet<>(), new ArrayList<>());
         Measurement measurement = new Measurement((double) row[10], new DateTime(row[9], DateTimeZone.UTC), null);
