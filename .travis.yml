@@ -1,4 +1,7 @@
 ---
+sudo: required
+dist: trusty
+group: deprecated-2017Q4
 addons:
   ssh_known_hosts: "51.254.121.242"
 before_deploy:
