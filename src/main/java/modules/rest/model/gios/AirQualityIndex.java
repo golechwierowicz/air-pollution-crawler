@@ -45,6 +45,8 @@ public class AirQualityIndex {
   public IndexLevel c6h6IndexLevel;
   @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", shape = JsonFormat.Shape.STRING)
   public DateTime c6h6SourceDataDate;
+  public Boolean stIndexStatus;
+  public String stIndexCrParam;
 
   public AirQualityIndex() {
   }

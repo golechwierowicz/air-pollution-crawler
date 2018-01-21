@@ -135,7 +135,7 @@ public class GIOSCallerServiceImpl extends CallerService {
     return String.format("%s/%s", HOST, "station/findAll");
   }
 
-  String airQualityIdxTarget(int id) {
+  private String airQualityIdxTarget(int id) {
     return String.format("%s/%s/%d", HOST, "aqindex/getIndex", id);
   }
 
@@ -145,15 +145,16 @@ public class GIOSCallerServiceImpl extends CallerService {
       return CompletableFuture.supplyAsync(() -> locationPoint);
     ObjectMapper mapper = new ObjectMapper();
     mapper.registerModule(new JodaModule());
-    return contentAsync.thenApply((aqidx) -> {
-      try {
-        AirQualityIndex airQualityIndex = mapper.readValue(aqidx, AirQualityIndex.class);
-        locationPoint.setAirQualityIndex(airQualityIndex);
-      } catch (IOException e) {
-        log.error("Cannot read air quality idx", e);
-      }
-      return locationPoint;
-    });
+    return contentAsync
+        .thenApply((aqidx) -> {
+          try {
+            AirQualityIndex airQualityIndex = mapper.readValue(aqidx, AirQualityIndex.class);
+            locationPoint.setAirQualityIndex(airQualityIndex);
+          } catch (IOException e) {
+            log.error("Cannot read air quality idx", e);
+          }
+          return locationPoint;
+        });
   }
 
   private <T> CompletableFuture<List<T>> allOf(List<CompletableFuture<T>> futuresList) {

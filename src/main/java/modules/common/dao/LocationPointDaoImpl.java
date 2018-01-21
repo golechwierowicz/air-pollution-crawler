@@ -20,14 +20,17 @@ public class LocationPointDaoImpl implements LocationPointDao {
 
   @Override
   public int save(LocationPointDTO locationPointDTO) {
+    Transaction transaction = null;
     try(Session session = hibernateSessionFactory.getInstance().openSession()) {
-      Transaction transaction = session.beginTransaction();
+      transaction = session.beginTransaction();
       session.save(locationPointDTO.getCity());
       session.save(locationPointDTO);
       transaction.commit();
       return locationPointDTO.getId();
     } catch (Exception ex) {
       log.error("Error saving location point", ex);
+      if(transaction != null)
+        transaction.rollback();
       return -1;
     }
   }
@@ -37,7 +40,7 @@ public class LocationPointDaoImpl implements LocationPointDao {
     try(Session session = hibernateSessionFactory.getInstance().openSession()) {
       return session.get(LocationPointDTO.class, id);
     } catch (Exception ex) {
-      log.info("Error getting loc point by id", ex);
+      log.error("Error getting loc point by id", ex);
       return null;
     }
   }
