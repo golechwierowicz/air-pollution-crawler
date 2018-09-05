@@ -6,7 +6,7 @@ angular.module('locationMap').component('locationMap', {
         function ($window, LocationPoint) {
             this.locationPoints = LocationPoint.query();
             this.$window = $window;
-            this.googleMapsUrl="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIID1G3V8XpGzGPD--pm_6atJhZPWDh90";
+            this.googleMapsUrl="https://maps.googleapis.com/maps/api/js?key=;
 
             this.goToDetails = function() {
                 $window.location.href = '#!/location_point/' + this.data.name + '/' + this.data.id;
